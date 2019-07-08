@@ -1,0 +1,84 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script>
+          
+          // ajax function 
+          $(document).ready(function() {
+                  $("#fundsform").submit(function(e) {
+                      e.preventDefault();
+                      $.ajax({
+                          type : "POST",
+                          // web service url
+                          url:"https://webservicenimbus.herokuapp.com/FundsForm",
+                          data : {
+                            "name":$("#name").val(),
+                            "email":$("#email").val(),
+                            "address":$("#address").val(),
+                            "phone":$("#phone").val(),
+                            "employer":$("#employer").val(),
+                            "password":$("#password").val(),
+                            "salary": $("#salary").val(),
+                            "duration": $("#duration").val(),
+                          },
+                          beforeSend : function() {
+                                
+                          },
+                          success : function(response) {
+                              $("#fundsform")[0].reset();
+                              $("#showApplicationID").html('<p>Thanks for submitting application</p>' +
+                                'Your application ID: ' + response.data.id);
+                              $("#showApplicationLink").html('Your application URL: https://webservicenimbus.herokuapp.com' + 
+                                '<p>You need to submit details to your employer portal to approve the application.</p>' +
+                                '<p>You can check application status by logging in to our portal.</p>');
+                          }
+                      });
+                      e.preventDefault();
+                  });
+
+                  });
+    </script>
+  </head>
+  <body>
+    <div classs="row">
+        <div class="col-md-6 container jumbotron">
+            <center><h1 class="container">Funds Form</h1></center>
+             <!-- Register form of MBR portal -->
+            <form method="post" id="fundsform" >
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="name" name="name" class="form-control"  placeholder="Enter your name" required >
+                </div>  
+                <div class="form-group">
+                  <label>Mailing Address</label>
+                  <input type="text" id="address" name="address" class="form-control"  placeholder="Enter your mailing address" required >
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control"  placeholder="Enter your email address" required >
+                  </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" name="phone" id="phone" class="form-control" placeholder="e.g 888 888 8888" required/>
+                </div>
+                <div class="form-group">
+                    <label>Employer Name</label>
+                    <input type="text" id="employer" name="employer" class="form-control"  placeholder="Enter your employer name" required >
+                </div>
+                <div class="form-group">
+                    <label>Employee Salary</label>
+                    <input type="number" id="salary" name="salary" class="form-control"  placeholder="Enter your salary e.g 50000" required >
+                </div>
+                <div class="form-group">
+                    <label>Duration of employment</label>
+                    <input type="number" id="duration" name="duration" class="form-control"  placeholder="Enter numbe of years e.g 5" required >
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" name="password" class="form-control"  minlength="8" placeholder="Enter your password" required >
+                </div>
+                <center><input type="submit" value="Submit" class="btn btn-success"></center>
+              </form>
+
+              <p id="showApplicationID"></p>
+              <p id="showApplicationLink"></p>
+        </div>
+    </div>

@@ -1,0 +1,106 @@
+<div class="container" style="background-color: blue; margin-top: 5%">
+  <div class = "jumbotron" style="background-color: lightgray">
+<br><br>
+
+<h1 class="display-4 text-center">Welcome to the Employer Portal</h1>
+
+<br><br>
+
+
+<div class="row text-center">
+
+  <!-- COLUMN 1 -->
+  <div class="col-sm-4"></div>
+
+  <!-- COLUMN 2 -->
+  <div class="col-sm-4">
+
+      <form id="loginForm">
+
+          <div class="form-group">
+            <label for="id"><strong>Employee Id:</strong></label>
+            <input type="id" name="id" class="form-control" id="id" required>
+          </div>
+      
+          <div class="form-group">
+            <label for="pwd"><strong>Password:</strong></label>
+            <input type="password" name="pwd" class="form-control" id="pwd" required minlength="6">
+            <p class="text-danger" id="passwordHelpTest"></p>
+          </div>
+      
+          <br>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+  </div>
+
+  <!-- COLUMN 3 -->
+  <div class="col-sm-4"></div>
+  <!--Login FORM-->
+
+</div>
+</div>
+</div>
+
+<!-- ******* JAVASCRIPT ******* -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+
+  (function($){
+      
+    function authorizeUser(e){
+
+    console.log("[authorizeUser] Function called");
+
+    var userId = document.getElementById("id").value;
+    var userPassword = document.getElementById("pwd").value;
+
+    console.log("User: " + userId);
+    console.log("Password: " + userPassword);
+
+
+    //package the data
+    var myData = { id: userId, pwd: userPassword };
+
+        $.ajax({
+            url: 'https://webservicenimbus.herokuapp.com/employer/authenticate',
+            dataType: 'jsonp',
+            type: 'POST',
+            data: myData,
+            success: function(data){
+          
+                console.log("[authorizeUser] Success");
+   
+              //User is authorized  
+              if(data.Authorized == true){
+
+                console.log("[authorizeUser] Authorized TRUE");
+                
+                window.location.assign("/form?id="+userId);
+
+              //User is not Authorized
+              }else if(data.Authorized == false){
+                
+                console.log("[authorizeUser] Authorized FALSE");
+                document.getElementById("passwordHelpTest").innerHTML = data.ErrorMessage;
+              }
+
+
+            },
+            error: function(error){
+                console.log("[authorizeUser] Error occured");
+                console.log(error);
+            }
+        });
+
+        //prevent the error from taking the user from the default page
+        e.preventDefault();
+    }
+
+    //when the submit button is pressed, run the authorizeUser function
+    $('#loginForm').submit( authorizeUser );
+
+})(jQuery);
+
+</script>

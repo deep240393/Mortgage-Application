@@ -1,0 +1,53 @@
+<script>
+    function show_data(){
+        data = JSON.parse(localStorage.getItem("user_data"));
+        document.getElementById('ApplicationID').innerHTML = data.data.id;
+        document.getElementById('Status').innerHTML = data.data.status;
+        document.getElementById('Name').innerHTML = data.data.name;
+        document.getElementById('Address').innerHTML = data.data.mailing_address;
+        document.getElementById('Email').innerHTML = data.data.email;
+        document.getElementById('Phone').innerHTML = data.data.phone;
+        document.getElementById('Employer').innerHTML = data.data.employer_name;
+    }
+    
+</script>
+<body onload="show_data()">
+    <div classs="row">
+        <div class="col-md-6 container jumbotron">
+            <center><h1 class="container">MBR Application Tracking</h1></center><br>
+             <!-- Login form of MBR portal -->
+            <center>
+                <div class="form-group">
+                    <b><label>Application ID</label></b><br>
+                    <label id="ApplicationID" name="ApplicationID"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Application Status</label></b><br>
+                    <label id="Status" name="Status"></label>
+                </div>
+                <hr>
+                <center><h1 class="container">Applicant Details</h1></center><br>
+                <div class="form-group">
+                    <b><label>Name</label></b><br>
+                    <label id="Name" name="Name"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Mailing Address</label></b><br>
+                    <label id="Address" name="Address"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Email Address</label></b><br>
+                    <label id="Email" name="Email"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Phone</label></b><br>
+                    <label id="Phone" name="Phone"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Employer Information</label></b><br>
+                    <label id="Employer" name="Employer"></label>
+                </div>
+            </center>
+      </div>
+    </div>
+</body>
