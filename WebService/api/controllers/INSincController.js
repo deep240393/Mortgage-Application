@@ -5,8 +5,65 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 
+var Logger = require('./LoggerController');
+
 module.exports = {
   
+    insuranceQuote: function(req, res){
 
+        try{
+            
+            //parse information from the RE request
+            var mortID = req.param('MortID');
+            var appraizalValue = parseFloat( req.param('AppraisalValue') );
+            var mlsID = req.param('MlsID');
+            var fullname = req.param('FullName');
+            
+           //calculat the insured value and deductable value
+            var insuredValue = appraizalValue * 1.5;    //150%
+            var deductableValue = appraizalValue * 0.2; //20%
+            
+            //create the MBRWebURL string with parameters
+            var MbrWebUrl = "http://localhost:1338/mbr/insuranceUpdate/?";
+            MbrWebUrl = MbrWebUrl + "MortID="+mortID+"&";
+            MbrWebUrl = MbrWebUrl + "MlsID="+mlsID+"&";
+            MbrWebUrl = MbrWebUrl + "FullName="+fullname+"&";
+            MbrWebUrl = MbrWebUrl + "InsuredValue="+insuredValue+"&";
+            MbrWebUrl = MbrWebUrl + "DeductableValue="+deductableValue;
+        
+        
+            //send an http request to the MBR controller to update the db
+            //https://stackoverflow.com/questions/30523872/make-a-http-request-in-your-controller-sails-js
+            
+            var request = require('request');
+
+            request.get({ 
+                url: MbrWebUrl
+            }, function(error, response, body) {
+                if (error) {
+                    //sails.log.error(error);
+                    //Logger.log("INSinc", error)
+                    
+                    return res.serverError(err);
+                }
+                else {
+
+                    Logger.log("INSinc", response)
+                    //sails.log.info(response);
+                    //sails.log.info(body);
+                    
+                    if(body=="OK"){
+                        return res.ok();
+
+                    }else{
+                        return res.send("MBR determined there to be an error with the data")
+                    }
+                }
+            });
+
+        }catch(err){
+            return res.serverError(err);
+        }
+    },
 };
 

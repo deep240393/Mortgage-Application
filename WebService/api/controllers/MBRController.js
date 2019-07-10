@@ -175,5 +175,20 @@ module.exports = {
         
     },
 
+    insuranceUpdate: function(req, res){
+
+        var mortId = req.param('MortID');
+        var mlsId = req.param('MlsID');
+        var fullname = req.param('FullName');
+        var deductableValue = parseFloat( req.param('DeductableValue') );
+        var insuredValue = parseFloat( req.param('InsuredValue') );
+        
+        
+
+
+
+        //if everything is successfull, return ok. Otherwise, return res.send("[errorstring]");
+        return res.ok();
+    },
 };
 
