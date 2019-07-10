@@ -85,6 +85,14 @@ module.exports.datastores = {
       password: 'Smit@1208',
       database: 'realestate',
       },
+      AppraiserDb:{
+        adapter: 'sails-mysql',
+        host: 'nimbus06.mysql.database.azure.com',
+        port: 3306,
+        user: 'smit12@nimbus06',
+        password: 'Smit@1208',
+        database: 'realestate',
+        },
   
 
 };
