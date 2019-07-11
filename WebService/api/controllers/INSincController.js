@@ -64,27 +64,24 @@ module.exports = {
                 url: MbrWebUrl
             }, function(error, response, body) {
                 if (error) {
-                    //sails.log.error(error);
-                    //Logger.log("INSinc", error)
-                    
-                    return res.serverError(err);
+
+                    Logger.log("INSinc", error)                    
+                    return res.serverError(error);
                 }
                 else {
 
-                    Logger.log("INSinc", response)
-                    //sails.log.info(response);
-                    //sails.log.info(body);
-                    
                     if(body=="OK"){
                         return res.ok();
 
                     }else{
-                        return res.send("MBR determined there to be an error with the data")
+                        Logger.log("INSinc","MBR return indicates an error with the data")
+                        return res.send("MBR return indicates an error with the data")
                     }
                 }
             });
 
         }catch(err){
+            Logger.log("INSinc", err)
             return res.serverError(err);
         }
     },
