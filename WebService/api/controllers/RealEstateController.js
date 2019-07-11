@@ -48,5 +48,47 @@ module.exports = {
             });
          }
     },
+    // Authenticate the appraiser
+    checkAppraisalCredentials: async function(req,res){
+        
+        var UserID = req.param("UserID");
+        var Password = req.param("Password");
+        var error_message = "";
+        var auth = false;
+        Appraiser.findOne({
+            UserID: UserID,
+            Password:Password
+        }).exec(function(err,data){
+            if(err){
+                error_message = "Something went wrong while fetching data.";
+            }
+            else if(!data){
+                error_message = "The credentials are not matched. Try again with correct credentials.";
+            }
+            else{
+                auth = true;
+                return res.send({
+                    error_message:error_message,
+                    data:data
+                })
+
+            }
+        })
+    },
+    // RE Data after login
+    getREData: function(req,res){
+       
+        RealEstate.find().exec(function(err,data){
+            if(err){
+                error_message = "Something went wrong while fetching data.";
+                return res.send({data:err})
+            }
+            else{
+                return res.send({
+                    data:data
+                })
+            }
+        })
+    }
 };
 

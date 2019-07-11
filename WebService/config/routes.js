@@ -24,7 +24,9 @@ module.exports.routes = {
   'POST /check_credentials' : 'MBRController.check_credentials',
   'POST /validateApplication' : 'MBRController.validateApplication',
   // '/ApplicationStatus': { view: 'pages/ApplicationStatus'},
-  'POST /REApprovalForm' : 'RealEstateController.REApprovalForm'
+  'POST /REApprovalForm' : 'RealEstateController.REApprovalForm',
+  'POST /appraisalForm/checkAppraisalCredentials': 'RealEstateController.checkAppraisalCredentials',
+  '/getREData': 'RealEstateController.getREData'
 
 
   /***************************************************************************

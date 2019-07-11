@@ -1,0 +1,47 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:1337/getREData",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                console.log(response)
+                loadData(response)
+            }
+        });
+    });
+    function loadData(response) {
+        $('#RETable tbody').html("");
+        var tbody = '';
+        console.log(response.data)
+        for (let index = 0; index < response.data.length; index++) {
+            if (response.data[index] != null) {
+                tbody += '<tr><td>' + response.data[index].MlsID + '</td>';
+                tbody += '<td><input type="text" placeholder = "Enter Value"></td>';
+                tbody += '<td><button type="submit" id="INSinc'+response.data[index]+'">Submit</button></td>';
+                tbody += '</tr>';
+            }
+        }
+        $('#RETable tbody').append(tbody);
+    }
+</script>
+
+<div class="container">
+    <table class="table table-bordered" id="RETable">
+        <thead>
+            <tr>
+                <th scope="col">MSID</th>
+                <th scope="col">Value</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
