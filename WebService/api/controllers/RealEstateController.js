@@ -50,7 +50,7 @@ module.exports = {
     },
     // Authenticate the appraiser
     checkAppraisalCredentials: async function(req,res){
-        
+        console.log(req.body);
         var UserID = req.param("UserID");
         var Password = req.param("Password");
         var error_message = "";
@@ -59,19 +59,27 @@ module.exports = {
             UserID: UserID,
             Password:Password
         }).exec(function(err,data){
+            console.log(data);
             if(err){
                 error_message = "Something went wrong while fetching data.";
             }
             else if(!data){
                 error_message = "The credentials are not matched. Try again with correct credentials.";
             }
-            else{
-                auth = true;
-                return res.send({
-                    error_message:error_message,
-                    data:data
-                })
+            // send data if credentials are correct
+            if (error_message == ''){
 
+                // Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+user_id+" ]");
+                return res.send({
+                    data: data,
+                    error_message: error_message
+                });  
+            }
+            // send the error message
+            else{
+                return res.send({
+                    error_message: error_message
+                });
             }
         })
     },

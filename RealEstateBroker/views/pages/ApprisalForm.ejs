@@ -16,10 +16,18 @@
 
         },
         success: function (response) {
-          console.log(response)
-          $("#appraisalLoginForm")[0].reset();
-          localStorage.setItem("user_data", JSON.stringify(response));
-          window.location.href = "Appraiser";
+          console.log(response);
+          if (response.error_message != '')
+          {
+            $("#errorMsg").html('<p class="alert alert-danger">Incorrect credentials. Please try again</p>');
+          }
+          else
+          {
+            $("#appraisalLoginForm")[0].reset();
+            localStorage.setItem("user_data", JSON.stringify(response));
+            window.location.href = "Appraiser";
+          }
+          
         },
         error: function(response){
           $("#errorMsg").html();
