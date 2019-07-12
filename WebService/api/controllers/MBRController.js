@@ -18,17 +18,19 @@ module.exports = {
         var phone = req.param('phone');
         var employer = req.param('employer');
         var password = req.param('password');
-        var employment_duration = req.param("duration");
-        var employee_salary = req.param("salary");
-        
+        var employee_ID = req.param('employee_ID');
+        var mortgage_value = req.param('mortgage_value');
+        var MlsID = req.param('MlsID');
+
         if (email === undefined || address === undefined || name === undefined || phone === undefined 
-            || employer === undefined || password === undefined || employment_duration === undefined || employee_salary === undefined) {
+            || employer === undefined || password === undefined || employee_ID === undefined ||
+            mortgage_value === undefined || MlsID === undefined) {
 
             Logger.log("MBR","[ValidationError] Enter all the details!!");
             return res.send({error_message : "Please enter all the details!"});
         }
         else if (email == '' || address == '' || name == '' || phone == '' ||
-         employer == '' || password == '' || employment_duration == '' || employee_salary == '') {
+         employer == '' || password == '' || employee_ID == '' || mortgage_value == '' || MlsID == '') {
            
             Logger.log("MBR","[ValidationError] Employee details can not be null!!");
             return res.send({error_message : "Employee details can not be null!!"});
@@ -45,9 +47,12 @@ module.exports = {
             mailing_address:address,
             employer_name:employer,
             password:password,
-            employment_duration:employment_duration,
-            employee_salary:employee_salary,
-            status:"pending"
+            employee_ID:employee_ID,
+            MlsID:MlsID,
+            mortgage_value:mortgage_value,
+            status:"pending",
+            EMP_confirmation:"false",
+            INSinc_confirmation:"false",
         }, async function(err, MBRdata){
             if(err){
 
@@ -56,8 +61,8 @@ module.exports = {
             }
             
             var fetch_data = await MBR.findOne({name:name, email:email, phone:phone, mailing_address:address,
-                employer_name:employer, password:password, employment_duration:employment_duration,
-                employee_salary:employee_salary, status:"pending"}, function(err, row){
+                employer_name:employer, password:password, employee_ID:employee_ID, MlsID:MlsID, 
+                mortgage_value:mortgage_value, status:"pending"}, function(err, row){
 
                     Logger.log("MBR","[Success] New Application for "+ name + " successfully created in MBR!");
                     return res.send({data: row});
