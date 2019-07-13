@@ -94,7 +94,12 @@ module.exports = {
                 Logger.log("MBR","[Success] Login Successful for user id : [ "+user_id+" ]");
                 return res.send({
                     data: {
-                        id: data.id, name: data.name, email: data.email, phone: data.phone, mailing_address: data.mailing_address, employer_name: data.employer_name, status: data.status
+                        id: data.id, name: data.name, email: data.email, phone: data.phone, 
+                        mailing_address: data.mailing_address, employer_name: data.employer_name, 
+                        status: data.status, MlsID: data.MlsID, mortgage_value: data.mortgage_value,
+                        employment_duration: data.employment_duration, employee_salary: data.employee_salary,
+                        employee_ID: data.employee_ID, insured_value: data.insured_value, deductible_value: data.deductible_value,
+                        EMP_confirmation: data.EMP_confirmation, INSinc_confirmation: data.INSinc_confirmation
                     },
                     error_message: error_message
                 });  // Send data to show status

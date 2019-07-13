@@ -1,18 +1,63 @@
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
 <script>
     function show_data(){
+
+        // fetch data
         data = JSON.parse(localStorage.getItem("user_data"));
         document.getElementById('ApplicationID').innerHTML = data.data.id;
-        document.getElementById('Status').innerHTML = data.data.status;
         document.getElementById('Name').innerHTML = data.data.name;
         document.getElementById('Address').innerHTML = data.data.mailing_address;
         document.getElementById('Email').innerHTML = data.data.email;
         document.getElementById('Phone').innerHTML = data.data.phone;
         document.getElementById('Employer').innerHTML = data.data.employer_name;
+        document.getElementById('MlsID').innerHTML = data.data.MlsID;
+        document.getElementById('mortgage_value').innerHTML = data.data.mortgage_value;
+
+        // update application status
+        if (data.data.status == 'accepted'){
+            document.getElementById('showApplicationStatusApproved').style.display = 'block';
+        }
+        else if (data.data.status == 'pending'){
+            document.getElementById('showApplicationStatusPending').style.display = 'block';
+        }
+        else {
+            document.getElementById('showApplicationStatusRejected').style.display = 'block';
+        }
+
+        // update employer application status
+        if (data.data.EMP_confirmation == 'true'){
+            document.getElementById('showEMPInfoApproved').style.display = 'block';
+            document.getElementById('employee_salary').style.display = 'block';
+            document.getElementById('employment_duration').style.display = 'block';
+            document.getElementById('employment_duration').innerHTML = document.getElementById('employment_duration').innerHTML + data.data.employment_duration;
+            document.getElementById('employee_salary').innerHTML = document.getElementById('employee_salary').innerHTML + data.data.employee_salary;
+        }
+        else {
+            document.getElementById('showEMPInfoPending').style.display = 'block';
+        }
+
+        // update RE broker application status
+        if (data.data.INSinc_confirmation == 'true'){
+            document.getElementById('showINSincInfoApproved').style.display = 'block';
+            document.getElementById('deductible_value').style.display = 'block';
+            document.getElementById('insured_value').style.display = 'block';
+            document.getElementById('deductible_value').innerHTML = document.getElementById('deductible_value').innerHTML + data.data.deductible_value;
+            document.getElementById('insured_value').innerHTML = document.getElementById('insured_value').innerHTML + data.data.insured_value;
+        }
+        else {
+            document.getElementById('showINSincInfoPending').style.display = 'block';
+        }
     }
-    
 </script>
-<body onload="show_data()">
-    <div classs="row">
+
+<!-- call function on load -->
+<body onload="show_data()">   
+    <div class="row">
         <div class="col-md-6 container jumbotron">
             <center><h1 class="container">MBR Application Tracking</h1></center><br>
              <!-- Login form of MBR portal -->
@@ -22,11 +67,13 @@
                     <label id="ApplicationID" name="ApplicationID"></label>
                 </div>
                 <div class="form-group">
-                    <b><label>Application Status</label></b><br>
-                    <label id="Status" name="Status"></label>
+                    <b><label>Application Status</label></b><br>   <!-- show application status -->
+                    <span class="label label-success" id="showApplicationStatusApproved" style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showApplicationStatusPending" style="display: none; width: 60px">Pending</span>
+                    <span class="label label-danger" id="showApplicationStatusRejected" style="display: none; width: 60px">Rejected</span>
                 </div>
                 <hr>
-                <center><h1 class="container">Applicant Details</h1></center><br>
+                <center><h2 class="container">Applicant Details</h2></center><br>
                 <div class="form-group">
                     <b><label>Name</label></b><br>
                     <label id="Name" name="Name"></label>
@@ -46,6 +93,42 @@
                 <div class="form-group">
                     <b><label>Employer Information</label></b><br>
                     <label id="Employer" name="Employer"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>MlsID</label></b><br>
+                    <label id="MlsID" name="MlsID"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Mortgage Value</label></b><br>
+                    <label id="mortgage_value" name="mortgage_value"></label>
+                </div>
+
+                <!-- https://www.w3schools.com/bootstrap/bootstrap_badges_labels.asp -->
+
+                <center><h2 class="container">Confirmation status</h2></center><br>
+                <center><h3 class="container">Employer portal</h3></center><br>
+                <div class="form-group">   <!-- show employer application status -->
+                    <b><label>Status</label></b><br>
+                    <span class="label label-success" id="showEMPInfoApproved" style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showEMPInfoPending" style="display: none; width: 60px">Pending</span>
+                    <label id="employment_duration" name="employment_duration" style="display: none">
+                        Employment Duration:     
+                    </label>
+                    <label id="employee_salary" name="employee_salary" style="display: none">
+                        Employee Salary: 
+                    </label>
+                </div>
+                <center><h3 class="container">RE Broker portal</h3></center><br>
+                <div class="form-group">   <!-- show RE broker application status -->
+                    <b><label>Status</label></b><br>
+                    <span class="label label-success" id="showINSincInfoApproved" style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showINSincInfoPending" style="display: none; width: 60px">Pending</span>
+                    <label id="insured_value" name="insured_value" style="display: none">
+                        Insured Value: 
+                    </label>
+                    <label id="deductible_value" name="deductible_value" style="display: none">
+                        Deductible Value: 
+                    </label>
                 </div>
             </center>
       </div>
