@@ -20,6 +20,9 @@ module.exports = {
     MortgageID:{
       type:"number",
       required:true
+    },
+    Value:{
+      type:"number"
     }
   },
   datastore: 'REDb'
