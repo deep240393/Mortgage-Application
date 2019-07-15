@@ -86,7 +86,7 @@ module.exports = {
     // RE Data after login
     getREData: function(req,res){
        
-        RealEstate.find().exec(function(err,data){
+        RealEstate.find({"Value":0}).exec(function(err,data){
             if(err){
                 error_message = "Something went wrong while fetching data.";
                 return res.send({data:err})
