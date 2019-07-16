@@ -113,6 +113,7 @@ module.exports = {
         });
     },
 
+    // Function to validate user data from Employer side
     validateApplication: async function(req, res){
         // Fetch variables
         var employer_name = req.param("employer_name");
@@ -121,30 +122,26 @@ module.exports = {
         var employeeName = req.param("employeeName");
         var employee_salary = req.param("salary");
         var employment_duration = req.param("employment_length");
+        var employee_ID = req.param("employeeID");
         var authenticated = false;   // will be set to true if request is accepted
         var error_message = '';
         
-        // Check credentials
-        MBR.findOne({id: mortgageID, name: employeeName, employer_name: employer_name, employee_salary: employee_salary, employment_duration: employment_duration, status: "pending"}).exec(async function(err, data){
+        MBR.findOne({id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: "pending"}).exec(async function(err, data){
             if (err){
                 error_message = "Something went wrong while fetching data.";
                 Logger.log("MBR","[Service Down] while validating application! "+error_message);
-               
             }
-            else if (!data){
-                error_message = "Wrong data submitted. Application has been rejected.";
-                // https://sailsjs.com/documentation/reference/waterline-orm/models/update-one
-                var updateRequest = await MBR.updateOne({id: mortgageID, status: "pending"}).set({status: "rejected"});
-                if (updateRequest){
-
-                    Logger.log("MBR","[RejectedApplication] for mortgage Id [ "+mortgageID+" ]");
+            else if (data){
+                var updateData = await MBR.updateOne({id: mortgageID, name: employeeName, employer_name: employer_name, EMP_confirmation: 'false', status: "pending"})
+                    .set({employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true'});
+                if (updateData){
+                    Logger.log("MBR","[Success] for mortgage Id [ "+mortgageID+" ] :  Employer data submitted!!");
                     return res.send({
-                        status: "REJECTED",
+                        status: "ACCEPTED",
                         error_message: error_message
-                        
                     });
                 }
-                else{
+                else {
                     error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
                     Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
                     return res.send({
@@ -153,35 +150,88 @@ module.exports = {
                     });
                 }
             }
-
-            if (error_message == ''){
-
-                // https://sailsjs.com/documentation/reference/waterline-orm/models/update-one
-                var updateRequest = await MBR.updateOne({id: mortgageID, status: "pending"}).set({status: "accepted"});
-                if (updateRequest){
-                    authenticated = true;
-                    Logger.log("MBR","[Success] for mortgage Id [ "+mortgageID+" ] :  Application Accepted!!");
+            else {
+                var updateData = await MBR.updateOne({id: mortgageID, status: 'pending', EMP_confirmation: 'false'})
+                    .set({EMP_confirmation: 'false', status: 'rejected'});
+                if (updateData){
+                    error_message = 'Wrong data submitted. Application has been rejected.';
+                    Logger.log("MBR","[RejectedApplication] for mortgage Id [ "+mortgageID+" ]");
                     return res.send({
-                        status: "ACCEPTED",
+                        status: "REJECTED",
                         error_message: error_message
+                        
                     });
                 }
-                else{
+                else {
                     error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
-                    Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] :  "+error_message);
+                    Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
                     return res.send({
                         status: "ERROR",
                         error_message: error_message
                     });
                 }
             }
-            else {
-                return res.send({
-                    status: "ERROR",
-                    error_message: error_message
-                });  
-            }
-        });        
+            
+        });
+
+        // // Check credentials
+        // MBR.findOne({id: mortgageID, name: employeeName, employer_name: employer_name, employee_salary: employee_salary, employment_duration: employment_duration, status: "pending"}).exec(async function(err, data){
+        //     if (err){
+        //         error_message = "Something went wrong while fetching data.";
+        //         Logger.log("MBR","[Service Down] while validating application! "+error_message);
+               
+        //     }
+        //     else if (!data){
+        //         error_message = "Wrong data submitted. Application has been rejected.";
+        //         // https://sailsjs.com/documentation/reference/waterline-orm/models/update-one
+        //         var updateRequest = await MBR.updateOne({id: mortgageID, status: "pending"}).set({status: "rejected"});
+        //         if (updateRequest){
+
+        //             Logger.log("MBR","[RejectedApplication] for mortgage Id [ "+mortgageID+" ]");
+        //             return res.send({
+        //                 status: "REJECTED",
+        //                 error_message: error_message
+                        
+        //             });
+        //         }
+        //         else{
+        //             error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
+        //             Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
+        //             return res.send({
+        //                 status: "ERROR",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //     }
+
+        //     if (error_message == ''){
+
+        //         // https://sailsjs.com/documentation/reference/waterline-orm/models/update-one
+        //         var updateRequest = await MBR.updateOne({id: mortgageID, status: "pending"}).set({status: "accepted"});
+        //         if (updateRequest){
+        //             authenticated = true;
+        //             Logger.log("MBR","[Success] for mortgage Id [ "+mortgageID+" ] :  Application Accepted!!");
+        //             return res.send({
+        //                 status: "ACCEPTED",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //         else{
+        //             error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
+        //             Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] :  "+error_message);
+        //             return res.send({
+        //                 status: "ERROR",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //     }
+        //     else {
+        //         return res.send({
+        //             status: "ERROR",
+        //             error_message: error_message
+        //         });  
+        //     }
+        // });        
         
     },
 

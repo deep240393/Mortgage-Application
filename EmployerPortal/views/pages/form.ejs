@@ -59,7 +59,7 @@
     var myData = { id: userId };
 
     $.ajax({
-        url: 'https://webservicenimbus.herokuapp.com/employer/retrieveData',
+        url: 'http://localhost:3000/employer/retrieveData',
         dataType: 'jsonp',
         type: 'POST',
         data: myData,
@@ -98,6 +98,7 @@
           "employer_name": employee.employerName,
           "salary": employee.salary,
           "employment_length": employee.employmentLengthYears,
+          "employeeID": employee.employeeID,
         },
         dataType: 'json',
         crossDomain:true,

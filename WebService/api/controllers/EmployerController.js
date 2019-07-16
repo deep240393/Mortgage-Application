@@ -33,7 +33,7 @@ module.exports = {
         else
         {
 
-        Employer.findOne({ userId: id, userPassword: password}).exec(function(err,employee){
+        Employer.findOne({ employeeID: id, userPassword: password}).exec(function(err,employee){
 
             //Database error
             if(err){
@@ -74,7 +74,7 @@ module.exports = {
         var id = req.param('id');
         var errorMessage = "";
 
-        Employer.findOne({ userId: id }).exec(function(err,employee){
+        Employer.findOne({ employeeID: id }).exec(function(err,employee){
 
             //Database error
             if(err){
