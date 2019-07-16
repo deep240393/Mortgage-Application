@@ -126,53 +126,175 @@ module.exports = {
         var authenticated = false;   // will be set to true if request is accepted
         var error_message = '';
         
-        MBR.findOne({id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: "pending"}).exec(async function(err, data){
-            if (err){
+        // MBR.findOne({id: mortgageID}).exec(async function(err, data){
+        //     if (err){
+        //         // database connection error. Log error
+        //         error_message = "Something went wrong while fetching data.";
+        //         Logger.log("MBR","[Service Down] while validating application from employer side! "+error_message);
+        //         return res.send({
+        //             status: "ERROR",
+        //             error_message: error_message
+        //         });
+        //     }
+        //     else if (!data){
+        //         error_message = "No such data available with broker. Check with our IT department if your information submitted to broker matches our database.";
+        //         Logger.log("MBR","[Data Not Matched] while validating application from employer side! "+error_message);
+        //         return res.send({
+        //             status: "ERROR",
+        //             error_message: error_message
+        //         });    
+        //     }
+        //     else {
+        //         // var check_application = await 
+        //     }
+        // });
+
+        MBR.findOne({id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name}).exec(async function(err, data){
+            if (err) {
+                // database connection error. Log error
                 error_message = "Something went wrong while fetching data.";
-                Logger.log("MBR","[Service Down] while validating application! "+error_message);
+                Logger.log("MBR","[Service Down] while validating application from employer side! "+error_message);
+                return res.send({
+                    status: "ERROR",
+                    error_message: error_message
+                });
             }
-            else if (data){
-                var updateData = await MBR.updateOne({id: mortgageID, name: employeeName, employer_name: employer_name, EMP_confirmation: 'false', status: "pending"})
-                    .set({employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true'});
-                if (updateData){
-                    Logger.log("MBR","[Success] for mortgage Id [ "+mortgageID+" ] :  Employer data submitted!!");
+            else if (!data){
+                error_message = "No such data available with broker. Check with our IT department if your information submitted to broker matches our database.";
+                Logger.log("MBR","[Data Not Matched] while validating application from employer side! "+error_message);
+                return res.send({
+                    status: "ERROR",
+                    error_message: error_message
+                });
+            }
+            else {
+                if (data.status == 'accepted'){
+                    // Though it is not error message, it is written just to avoid ambiguity for employer
+                    error_message = "Application is already accepted.";
+                    Logger.log("MBR","[Application Already Accepted] for mortgage Id [ "+mortgageID+" ]");
                     return res.send({
                         status: "ACCEPTED",
                         error_message: error_message
-                    });
+                    }); 
                 }
-                else {
-                    error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
-                    Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
-                    return res.send({
-                        status: "ERROR",
-                        error_message: error_message
-                    });
-                }
-            }
-            else {
-                var updateData = await MBR.updateOne({id: mortgageID, status: 'pending', EMP_confirmation: 'false'})
-                    .set({EMP_confirmation: 'false', status: 'rejected'});
-                if (updateData){
-                    error_message = 'Wrong data submitted. Application has been rejected.';
-                    Logger.log("MBR","[RejectedApplication] for mortgage Id [ "+mortgageID+" ]");
+                else if (data.status == 'rejected'){
+                    // Though it is not error message, it is written just to avoid ambiguity for employer
+                    error_message = "Application is already rejected.";
+                    Logger.log("MBR","[Application Already Rejected] for mortgage Id [ "+mortgageID+" ]");
                     return res.send({
                         status: "REJECTED",
                         error_message: error_message
-                        
-                    });
+                    }); 
                 }
                 else {
-                    error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
-                    Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
-                    return res.send({
-                        status: "ERROR",
-                        error_message: error_message
-                    });
+                    if (data.EMP_confirmation == 'true'){
+                       // Though it is not error message, it is written just to avoid ambiguity for employer
+                        error_message = "Application is already submitted.";
+                        Logger.log("MBR","[Application Already Submitted] for mortgage Id [ "+mortgageID+" ]: from employer side");
+                        return res.send({
+                            status: "ERROR",
+                            error_message: error_message
+                        }); 
+                    }
+                    else {
+                        if (data.INSinc_confirmation == 'true'){
+                            // if data from INSinc is also validated, accept the application.
+                            var updateData = await MBR.updateOne({id: mortgageID, name: employeeName, employer_name: employer_name})
+                                .set({employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true', status: 'accepted'});
+                            if (!updateData){
+                                // This loop will only be reached if service is down
+                                error_message = "Something went wrong while updating data. Please try again later";
+                                Logger.log("MBR","[Service Down] while validating application from employer side! "+error_message);
+                                return res.send({
+                                    status: "ERROR",
+                                    error_message: error_message
+                                });             
+                            }
+                            else {
+                                // Though it is not error message, it is written just to avoid ambiguity for employer
+                                error_message = "Employer data matched. Application is accepted";
+                                Logger.log("MBR","[Success both portal] for mortgage Id [ "+mortgageID+" ]");
+                                return res.send({
+                                    status: "ACCEPTED",
+                                    error_message: error_message
+                                }); 
+                            }
+                        }
+                        else {
+                            // if data from INSinc is not validated yet, just update MBR table.
+                            var updateData = await MBR.updateOne({id: mortgageID, name: employeeName, employer_name: employer_name})
+                                .set({employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true'});
+                            if (!updateData){
+                                // This loop will only be reached if service is down
+                                error_message = "Something went wrong while updating data. Please try again later";
+                                Logger.log("MBR","[Service Down] while validating application from employer side! "+error_message);
+                                return res.send({
+                                    status: "ERROR",
+                                    error_message: error_message
+                                });             
+                            }
+                            else {
+                                // Though it is not error message, it is written just to avoid ambiguity for employer
+                                error_message = "Employer data matched. Employer data has been accepted. Insurance company has not submitted your data yet.";
+                                Logger.log("MBR","[Success employer portal] for mortgage Id [ "+mortgageID+" ]");
+                                return res.send({
+                                    status: "ACCEPTED",
+                                    error_message: error_message
+                                }); 
+                            }
+                        }
+                    }
                 }
             }
-            
         });
+
+        // MBR.findOne({id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: "pending"}).exec(async function(err, data){
+        //     if (err){
+        //         error_message = "Something went wrong while fetching data.";
+        //         Logger.log("MBR","[Service Down] while validating application! "+error_message);
+        //     }
+        //     else if (data){
+        //         var updateData = await MBR.updateOne({id: mortgageID, name: employeeName, employer_name: employer_name, EMP_confirmation: 'false', status: "pending"})
+        //             .set({employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true'});
+        //         if (updateData){
+        //             Logger.log("MBR","[Success] for mortgage Id [ "+mortgageID+" ] :  Employer data submitted!!");
+        //             return res.send({
+        //                 status: "ACCEPTED",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //         else {
+        //             error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
+        //             Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
+        //             return res.send({
+        //                 status: "ERROR",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //     }
+        //     else {
+        //         var updateData = await MBR.updateOne({id: mortgageID, status: 'pending', EMP_confirmation: 'false'})
+        //             .set({EMP_confirmation: 'false', status: 'rejected'});
+        //         if (updateData){
+        //             error_message = 'Wrong data submitted. Application has been rejected.';
+        //             Logger.log("MBR","[RejectedApplication] for mortgage Id [ "+mortgageID+" ]");
+        //             return res.send({
+        //                 status: "REJECTED",
+        //                 error_message: error_message
+                        
+        //             });
+        //         }
+        //         else {
+        //             error_message = "Something went wrong while updating request. Please try again later or check broker page for status.";
+        //             Logger.log("MBR","[UpdateStatusError] for mortgage Id [ "+mortgageID+" ] : "+error_message);
+        //             return res.send({
+        //                 status: "ERROR",
+        //                 error_message: error_message
+        //             });
+        //         }
+        //     }
+            
+        // });
 
         // // Check credentials
         // MBR.findOne({id: mortgageID, name: employeeName, employer_name: employer_name, employee_salary: employee_salary, employment_duration: employment_duration, status: "pending"}).exec(async function(err, data){
