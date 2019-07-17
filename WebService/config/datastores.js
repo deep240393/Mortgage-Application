@@ -50,32 +50,32 @@ module.exports.datastores = {
     *                                                                          *
     ********************************************
     *******************************/
-  MbrDb: { 
-    adapter: 'sails-mysql',
-    host: 'nimbus06.mysql.database.azure.com',
-    port: 3306,
-    user: 'smit12@nimbus06',
-    password: 'Smit@1208',
-    database: 'mbr',
-  },
+  // MbrDb: { 
+  //   adapter: 'sails-mysql',
+  //   host: 'nimbus06.mysql.database.azure.com',
+  //   port: 3306,
+  //   user: 'smit12@nimbus06',
+  //   password: 'Smit@1208',
+  //   database: 'mbr',
+  // },
 
-  employerDB:{
-    adapter: 'sails-mysql',
-    host: 'nimbus06.mysql.database.azure.com',
-    port: 3306,
-    user: 'smit12@nimbus06',
-    password: 'Smit@1208',
-    database: 'employer',
-  },
+  // employerDB:{
+  //   adapter: 'sails-mysql',
+  //   host: 'nimbus06.mysql.database.azure.com',
+  //   port: 3306,
+  //   user: 'smit12@nimbus06',
+  //   password: 'Smit@1208',
+  //   database: 'employer',
+  // },
 
-  loggerDB:{
-    adapter: 'sails-mysql',
-    host: 'nimbus06.mysql.database.azure.com',
-    port: 3306,
-    user: 'smit12@nimbus06',
-    password: 'Smit@1208',
-    database: 'logs',
-    },
+  // loggerDB:{
+  //   adapter: 'sails-mysql',
+  //   host: 'nimbus06.mysql.database.azure.com',
+  //   port: 3306,
+  //   user: 'smit12@nimbus06',
+  //   password: 'Smit@1208',
+  //   database: 'logs',
+  //   },
     
     REDb:{
       adapter: 'sails-mysql',
@@ -91,7 +91,7 @@ module.exports.datastores = {
         port: 3306,
         user: 'smit12@nimbus06',
         password: 'Smit@1208',
-        database: 'realestate',
+        database: 'appraiser',
         },
   
 

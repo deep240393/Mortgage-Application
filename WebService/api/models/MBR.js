@@ -9,40 +9,40 @@ module.exports = {
 
   attributes: {
 
-    name:{
-      type: "string",
-      required:true
-    },
-    email:{
-      type:"string",
-      required:true
-    },
-    phone:{
-      type:"string",
-      required:true
-    },
-    mailing_address:{
-      type:"string",
-      required:true
-    },
-    employer_name:{
-      type:"string",
-      required:true
-    },
-    password:{
-      type:"string",
-      required:true
-    },
-    employment_duration:{
-      type:"string",
-    },
-    employee_salary:{
-      type:"string",
-    },
-    status:{
-      type:"string",
-    }
+  //   name:{
+  //     type: "string",
+  //     required:true
+  //   },
+  //   email:{
+  //     type:"string",
+  //     required:true
+  //   },
+  //   phone:{
+  //     type:"string",
+  //     required:true
+  //   },
+  //   mailing_address:{
+  //     type:"string",
+  //     required:true
+  //   },
+  //   employer_name:{
+  //     type:"string",
+  //     required:true
+  //   },
+  //   password:{
+  //     type:"string",
+  //     required:true
+  //   },
+  //   employment_duration:{
+  //     type:"string",
+  //   },
+  //   employee_salary:{
+  //     type:"string",
+  //   },
+  //   status:{
+  //     type:"string",
+  //   }
   },
-  datastore: 'MbrDb'
+  // datastore: 'MbrDb'
 };
 

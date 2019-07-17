@@ -9,19 +9,19 @@ module.exports = {
 
   attributes: {
     
-    timestamp: {
-      type: 'string',
-      columnType: 'datetime',
-      required: true,
-    },
+    // timestamp: {
+    //   type: 'string',
+    //   columnType: 'datetime',
+    //   required: true,
+    // },
 
-    message: {
-      type: 'string',
-      required: true,
-      maxLength: 255,
-    },
+    // message: {
+    //   type: 'string',
+    //   required: true,
+    //   maxLength: 255,
+    // },
 
   },
-  datastore: 'loggerDB'
+ // datastore: 'loggerDB'
 };
 
