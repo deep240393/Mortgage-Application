@@ -150,9 +150,8 @@ module.exports = {
                 // id is matched
                 var check_application = await MBR.findOne({ id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: 'pending' });
                 if (!check_application) {
-
                     var check_status = await MBR.findOne({ id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name });
-                    if (!check_status) {
+                    if (!check_status && data.EMP_confirmation != 'true') {
                         // wrong data is submitted. Reject the application
                         var reject_application = await MBR.updateOne({ id: mortgageID }).set({ status: 'rejected' });
                         if (!reject_application) {
@@ -175,8 +174,16 @@ module.exports = {
                         }
                     }
                     else {
+                        if (data.EMP_confirmation == 'true'){
+                            error_message = "Application is already submitted.";
+                            Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from employer side");
+                            return res.send({
+                                status: "ERROR",
+                                error_message: error_message
+                            });    
+                        }
                         // This loop will be only reached if application is already accepted or rejected
-                        if (check_status.status == 'accepted') {
+                        if (data.status == 'accepted') {
                             // Though it is not error message, it is written just to avoid ambiguity for employer
                             error_message = "Application is already accepted.";
                             Logger.log("MBR", "[Application Already Accepted] for mortgage Id [ " + mortgageID + " ]");
