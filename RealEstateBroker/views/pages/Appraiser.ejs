@@ -22,7 +22,7 @@
         for (let index = 0; index < response.data.length; index++) {
             if (response.data[index] != null) {
                 tbody += '<tr><td>' + response.data[index].MlsID + '</td>';
-                tbody += '<td><input type="text" placeholder = "Enter Value"></td>';
+                tbody += '<td><input type="text" id="AppraiserValue'+index+'" placeholder = "Enter Value"></td>';
                 tbody += '<td><button type="submit" id="INSinc'+response.data[index]+'">Submit</button></td>';
                 tbody += '</tr>';
             }

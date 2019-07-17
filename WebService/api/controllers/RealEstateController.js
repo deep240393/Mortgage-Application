@@ -4,7 +4,7 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-
+var Logger = require('./LoggerController');
 module.exports = {
 
   // function to add property approval deatils of the applicant in the real estate table
@@ -18,12 +18,12 @@ module.exports = {
         
         if (MlsID === undefined || Name === undefined || MortgageID=== undefined) {
 
-            // Logger.log("RealEstate approval form","[ValidationError] Enter all the details!!");
+            Logger.log("RealEstate approval form","[ValidationError] Enter all the details!!");
             return res.send({error_message : "Please enter all the details!"});
         }
         else if (MlsID == '' || Name == '' || MortgageID == '' ) {
            
-            // Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details can not be null!!");
+            Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details can not be null!!");
             return res.send({error_message : "Real estate approval form details can not be null!!"});
 
         }
@@ -38,11 +38,11 @@ module.exports = {
         }, async function(err, REApprovalFormData){
             if(err){
 
-                //Logger.log("RealEstate Approval","[RegistrationError] Error in registering new applicant"+ Name);
+                Logger.log("RealEstate Approval","[RegistrationError] Error in registering new applicant"+ Name);
                 return res.send({data: err});
             }
             else{
-                //Logger.log("RealEstate Approval","[Success] New Application for "+ Name + " successfully created in RealEstate!");
+                Logger.log("RealEstate Approval","[Success] New Application for "+ Name + " successfully created in RealEstate!");
                 return res.send({data: "Your mortgage property deatils are send for approval"});
             }
             });
@@ -69,7 +69,7 @@ module.exports = {
             // send data if credentials are correct
             if (error_message == ''){
 
-                // Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+user_id+" ]");
+                Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+user_id+" ]");
                 return res.send({
                     data: data,
                     error_message: error_message
@@ -77,6 +77,7 @@ module.exports = {
             }
             // send the error message
             else{
+                Logger.log("invalid credentails");
                 return res.send({
                     error_message: error_message
                 });
