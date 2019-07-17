@@ -174,13 +174,13 @@ module.exports = {
                         }
                     }
                     else {
-                        if (data.EMP_confirmation == 'true'){
+                        if (data.EMP_confirmation == 'true') {
                             error_message = "Application is already submitted.";
                             Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from employer side");
                             return res.send({
                                 status: "ERROR",
                                 error_message: error_message
-                            });    
+                            });
                         }
                         // This loop will be only reached if application is already accepted or rejected
                         if (data.status == 'accepted') {
@@ -260,6 +260,119 @@ module.exports = {
                                     status: "ACCEPTED",
                                     error_message: error_message
                                 });
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    insuranceUpdate: async function (req, res) {
+
+        var mortgageID = req.param('MortID');
+        var MlsID = req.param('MlsID');
+        var name = req.param('FullName');
+        var deductible_value = parseFloat(req.param('DeductableValue'));
+        var insured_value = parseFloat(req.param('InsuredValue'));
+
+        MBR.findOne({ id: mortgageID }).exec(async function (err, data) {
+            if (err) {
+                // database connection error. Log error
+                error_message = "Something went wrong while fetching data.";
+                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                return res.send([error_message]);
+            }
+            else if (!data) {
+                // wrong id is submitted
+                error_message = "No such data available with broker. Check with our IT department if your information submitted to broker matches our database.";
+                Logger.log("MBR", "[Data Not Matched] while validating application from RE side! " + error_message);
+                return res.send([error_message]);
+            }
+            else {
+                // id is matched
+                var check_application = await MBR.findOne({ id: mortgageID, name: name, MlsID: MlsID, status: 'pending' });
+                if (!check_application) {
+                    var check_status = await MBR.findOne({ id: mortgageID, name: name, MlsID: MlsID });
+                    if (!check_status && data.INSinc_confirmation != 'true') {
+                        // wrong data is submitted. Reject the application
+                        var reject_application = await MBR.updateOne({ id: mortgageID }).set({ status: 'rejected' });
+                        if (!reject_application) {
+                            // database connection error. Log error
+                            error_message = "Something went wrong while rejecting application.";
+                            Logger.log("MBR", "[Service Down] while rejecting application from RE side! " + error_message);
+                            return res.send([error_message]);
+                        }
+                        else {
+                            // return response
+                            error_message = "Application is rejected. Wrong data submitted.";
+                            Logger.log("MBR", "[Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            return res.send([error_message]);
+                        }
+                    }
+                    else {
+                        if (data.INSinc_confirmation == 'true') {
+                            error_message = "Application is already submitted.";
+                            Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from RE side");
+                            return res.ok();
+                        }
+                        // This loop will be only reached if application is already accepted or rejected
+                        if (data.status == 'accepted') {
+                            // Though it is not error message, it is written just to avoid ambiguity for employer
+                            error_message = "Application is already accepted.";
+                            Logger.log("MBR", "[Application Already Accepted] for mortgage Id [ " + mortgageID + " ]");
+                            return res.ok();
+                        }
+                        else {
+                            // Though it is not error message, it is written just to avoid ambiguity for employer
+                            error_message = "Application is already rejected.";
+                            Logger.log("MBR", "[Application Already Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            return res.send([error_message]);
+                        }
+                    }
+                }
+                else {
+                    // Application status is pending
+                    if (check_application.INSinc_confirmation == 'true') {
+                        // Data from employer is already submitted.
+                        // Though it is not error message, it is written just to avoid ambiguity for employer
+                        error_message = "Application is already submitted.";
+                        Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from RE side");
+                        return res.ok();
+                    }
+                    else {
+                        if (check_application.EMP_confirmation == 'true') {
+                            // if data from employer is also validated, accept the application.
+                            var updateData = await MBR.updateOne({ id: mortgageID, name: name, MlsID: MlsID })
+                                .set({ insured_value: insured_value, deductible_value: deductible_value, INSinc_confirmation: 'true', status: 'accepted' });
+                            if (!updateData) {
+                                // This loop will only be reached if service is down
+                                error_message = "Something went wrong while updating data. Please try again later";
+                                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                                return res.send([error_message]);
+                            }
+                            else {
+                                // Though it is not error message, it is written just to avoid ambiguity for employer
+                                error_message = "RE data matched. Application is accepted";
+                                Logger.log("MBR", "[Success both portal] for mortgage Id [ " + mortgageID + " ]");
+                                return res.ok();
+                            }
+                        }
+                        else {
+                            // if data from INSinc is not validated yet, just update MBR table.
+                            var updateData = await MBR.updateOne({ id: mortgageID, name: name, MlsID: MlsID })
+                                .set({ insured_value: insured_value, deductible_value: deductible_value, INSinc_confirmation: 'true' });
+                            if (!updateData) {
+                                // This loop will only be reached if service is down
+                                error_message = "Something went wrong while updating data. Please try again later";
+                                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                                return res.send([error_message]);
+                            }
+                            else {
+                                // Though it is not error message, it is written just to avoid ambiguity for employer
+                                error_message = "Employer data matched. RE data has been accepted. Employer company has not submitted your data yet.";
+                                Logger.log("MBR", "[Success RE portal] for mortgage Id [ " + mortgageID + " ]");
+                                return res.ok();
                             }
                         }
                     }
