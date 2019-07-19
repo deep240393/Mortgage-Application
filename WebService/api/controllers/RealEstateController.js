@@ -27,6 +27,11 @@ module.exports = {
             return res.send({error_message : "Real estate approval form details can not be null!!"});
 
         }
+
+        else if (isNaN(MlsID) ||  isNaN(MortgageID) ) {
+            Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details MlsID and MortgageID should be number");
+            res.send({ error: 'MlsID and MortgageID should be a number' });
+        }
         else
         {
             console.log("Create data",req.body);
