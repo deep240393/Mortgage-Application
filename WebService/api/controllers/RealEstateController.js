@@ -74,7 +74,7 @@ module.exports = {
             // send data if credentials are correct
             if (error_message == ''){
 
-                Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+user_id+" ]");
+                Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+UserID+" ]");
                 return res.send({
                     data: data,
                     error_message: error_message
@@ -108,7 +108,7 @@ module.exports = {
     updateREData: function(req,res){
         var value = req.param("value");
         var id = req.param('id');
-        RealEstate.update({
+        RealEstate.updateOne({
             //Value:value
             MlsID:id
         }).set({Value:value}).exec(function(err,data){
@@ -117,13 +117,7 @@ module.exports = {
             }else{
                 console.log(value);
                 console.log(id);
-                return res.send({
-                    data:{
-                       // Value:value,
-                        //MlsID:id
-                        data
-                    }
-                })
+                return res.send(data)
             }
         })
     }

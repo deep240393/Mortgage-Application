@@ -20,12 +20,15 @@
         console.log("response",response.data)
         for (let index = 0; index < response.data.length; index++) {
             if (response.data[index] != null) {
-                tbody += '<tr><td>' + response.data[index].MlsID + '</td>';
+                tbody += '<tr> <form id="appraiserValue'+index+'"><td>' + response.data[index].MlsID + '</td>';
                 tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value'+index+'"required></td>';
-                tbody += '<td><input type="submit" id="INSinc'+index+'"/></td>';
-                tbody += '</tr>';
+                tbody += '<td><input type="submit" id="INSinc'+index+'"></td>';
+                tbody += '</tr></form>';
                 }
-                $("#INSinc"+index).click(function(){
+                $("#appraiserValue"+index).submit(function(){
+                    console.log("ajax called");
+                    console.log("value entered",$("#value"+index).val());
+                    console.log("msid",response.data[index].MlsID);
                     $.ajax({
                         type: "POST",
                         url: 'http://localhost:1337/updateREData',
@@ -36,8 +39,9 @@
                         beforeSend:function(){
 
                         },
-                        success: function(){
+                        success: function(response){
                             //URL for UELI
+                            console.log("got response",response);
                             alert("data saved"+ $("#value"+index).val());
                         }
                     })
