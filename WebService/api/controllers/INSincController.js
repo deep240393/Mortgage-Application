@@ -65,23 +65,23 @@ module.exports = {
             }, function(error, response, body) {
                 if (error) {
 
-                    Logger.log("INSinc", error)                    
+                    Logger.log("INSinc", "[Error] [MortId]: " + mortID + error)                    
                     return res.serverError(error);
                 }
                 else {
 
                     if(body=="OK"){
+                        Logger.log("INSinc","[Success] Insurance value has been successfully sent to MBR [MortId]: " + mortID)
                         return res.ok();
-
                     }else{
-                        Logger.log("INSinc","MBR return indicates an error with the data")
-                        return res.send("MBR return indicates an error with the data")
+                        Logger.log("INSinc","[Error] MBR return indicates an error with the data [MortId]: " + mortID)
+                        return res.send("[Error] MBR return indicates an error with the data [MortId]: " + mortID)
                     }
                 }
             });
 
         }catch(err){
-            Logger.log("INSinc", err)
+            Logger.log("INSinc","[Error] [MortId]: " + mortID + err)
             return res.serverError(err);
         }
     },
