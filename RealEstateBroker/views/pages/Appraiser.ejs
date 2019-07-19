@@ -1,0 +1,62 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:1337/getREData",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                loadData(response)
+            }
+        });
+    });
+    function loadData(response) {
+        $('#RETable tbody').html("");
+        var tbody = '';
+        console.log("response",response.data)
+        for (let index = 0; index < response.data.length; index++) {
+            if (response.data[index] != null) {
+                tbody += '<tr><td>' + response.data[index].MlsID + '</td>';
+                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value'+index+'"required></td>';
+                tbody += '<td><input type="submit" id="INSinc'+index+'"/></td>';
+                tbody += '</tr>';
+                }
+                $("#INSinc"+index).click(function(){
+                    $.ajax({
+                        type: "POST",
+                        url: 'http://localhost:1337/updateREData',
+                        data:{
+                            'value':$("#value"+index).val(),
+                            'id': response.data[index].MlsID,
+                        },
+                        beforeSend:function(){
+
+                        },
+                        success: function(){
+                            //URL for UELI
+                            alert("data saved"+ $("#value"+index).val());
+                        }
+                    })
+                })
+        }
+        $('#RETable tbody').append(tbody);
+    }
+</script>
+
+<div class="container">
+    <table class="table table-bordered" id="RETable">
+        <thead>
+            <tr>
+                <th scope="col">MSID</th>
+                <th scope="col">Value</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
