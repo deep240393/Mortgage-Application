@@ -175,5 +175,21 @@ module.exports = {
         
     },
 
+    /*
+    @CHINTAN - FOR REFERENCE ONLY - I/O FOR INSINC TO MBR - DELETE WHEN NO LONGER NEEDED 
+    
+    insuranceUpdate: function(req, res){
+
+        var mortId = req.param('MortID');
+        var mlsId = req.param('MlsID');
+        var fullname = req.param('FullName');
+        var deductableValue = parseFloat( req.param('DeductableValue') );
+        var insuredValue = parseFloat( req.param('InsuredValue') );
+        
+
+        //if everything is successfull, return ok. Otherwise, return res.send("[errorstring]" or something similar);
+        return res.ok();
+    },
+    */
 };
 
