@@ -26,7 +26,8 @@ module.exports.routes = {
   // '/ApplicationStatus': { view: 'pages/ApplicationStatus'},
   'POST /REApprovalForm' : 'RealEstateController.REApprovalForm',
   'POST /appraisalForm/checkAppraisalCredentials': 'RealEstateController.checkAppraisalCredentials',
-  '/getREData': 'RealEstateController.getREData'
+  '/getREData': 'RealEstateController.getREData',
+  'POST /updateREData': 'RealEstateController.updateREData'
 
 
   /***************************************************************************

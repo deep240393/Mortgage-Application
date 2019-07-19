@@ -10,7 +10,6 @@
 
             },
             success: function (response) {
-                console.log(response)
                 loadData(response)
             }
         });
@@ -18,14 +17,36 @@
     function loadData(response) {
         $('#RETable tbody').html("");
         var tbody = '';
-        console.log(response.data)
+        console.log("response",response.data)
         for (let index = 0; index < response.data.length; index++) {
             if (response.data[index] != null) {
                 tbody += '<tr><td>' + response.data[index].MlsID + '</td>';
+<<<<<<< Updated upstream
                 tbody += '<td><input type="text" id="AppraiserValue'+index+'" placeholder = "Enter Value"></td>';
                 tbody += '<td><button type="submit" id="INSinc'+response.data[index]+'">Submit</button></td>';
+=======
+                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value'+index+'"required></td>';
+                tbody += '<td><input type="submit" id="INSinc'+index+'"/></td>';
+>>>>>>> Stashed changes
                 tbody += '</tr>';
-            }
+                }
+                $("#INSinc"+index).click(function(){
+                    $.ajax({
+                        type: "POST",
+                        url: 'http://localhost:1337/updateREData',
+                        data:{
+                            'value':$("#value"+index).val(),
+                            'id': response.data[index].MlsID,
+                        },
+                        beforeSend:function(){
+
+                        },
+                        success: function(){
+                            //URL for UELI
+                            alert("data saved"+ $("#value"+index).val());
+                        }
+                    })
+                })
         }
         $('#RETable tbody').append(tbody);
     }

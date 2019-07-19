@@ -98,6 +98,29 @@ module.exports = {
                 })
             }
         })
+    },
+
+    updateREData: function(req,res){
+        var value = req.param("value");
+        var id = req.param('id');
+        RealEstate.update({
+            //Value:value
+            MlsID:id
+        }).set({Value:value}).exec(function(err,data){
+            if(err){
+                return res.send({data:err})
+            }else{
+                console.log(value);
+                console.log(id);
+                return res.send({
+                    data:{
+                       // Value:value,
+                        //MlsID:id
+                        data
+                    }
+                })
+            }
+        })
     }
 };
 
