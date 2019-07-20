@@ -22,6 +22,14 @@ module.exports = {
         var mortgage_value = req.param('mortgage_value');
         var MlsID = req.param('MlsID');
 
+        if (mortgage_value !== undefined && mortgage_value != '') {
+            mortgage_value = mortgage_value.replace(",", "");   // remove commas from value
+        }
+
+        // https://stackoverflow.com/a/46181/8243992
+        const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        const nameRegexp = /^[A-Za-z\s]+$/;
+
         if (email === undefined || address === undefined || name === undefined || phone === undefined
             || employer === undefined || password === undefined || employee_ID === undefined ||
             mortgage_value === undefined || MlsID === undefined) {
@@ -35,6 +43,18 @@ module.exports = {
             Logger.log("MBR", "[ValidationError] Employee details can not be null!!");
             return res.send({ error_message: "Employee details can not be null!!" });
 
+        }
+        else if (!emailRegexp.test(email.toLowerCase())) {
+            Logger.log("MBR", "[ValidationError] Email not valid - New application!!");
+            return res.send({ error_message: "Email not valid" });
+        }
+        else if (!nameRegexp.test(name.toLowerCase())) {
+            Logger.log("MBR", "[ValidationError] Name not valid - New application!!");
+            return res.send({ error_message: "Name not valid" });
+        }
+        else if (isNaN(mortgage_value) || parseFloat(mortgage_value) < 0) {
+            Logger.log("MBR", "[ValidationError] Mortgage Value not valid - New application!!");
+            return res.send({ error_message: "Mortgage Value not valid" });
         }
         else {
             // ORM to insert data into table
@@ -119,13 +139,55 @@ module.exports = {
         // Fetch variables
         var employer_name = req.param("employer_name");
         var mortgageID = req.param("mortgageID");
-        // var webServiceLinkID = req.param("webServiceLink").split('/')[4];   // https://stackoverflow.com/a/25965556
         var employeeName = req.param("employeeName");
         var employee_salary = req.param("salary");
         var employment_duration = req.param("employment_length");
         var employee_ID = req.param("employeeID");
-        var authenticated = false;   // will be set to true if request is accepted
         var error_message = '';
+        const nameRegexp = /^[A-Za-z\s]+$/;
+
+        if (employee_salary !== undefined && employee_salary != '') {
+            employee_salary = employee_salary.replace(",", "");
+        }
+
+        // Check if all parametes are passed
+        if (employer_name === undefined || mortgageID === undefined || employeeName === undefined
+            || employee_salary === undefined || employment_duration === undefined || employee_ID === undefined){
+            error_message = "Please provide all parameters.";
+            Logger.log("MBR", "[ValidationError] All parameters not passed from Employer");
+            return res.send({
+                status: "ERROR",
+                error_message: error_message
+            });
+        }
+
+        // Check if any parameter is not empty
+        else if (employer_name == '' || mortgageID == '' || employeeName == ''
+            || employee_salary == '' || employment_duration == '' || employee_ID == ''){
+            error_message = "Any parameter cannot be null.";
+            Logger.log("MBR", "[ValidationError] Empty value passed from Employer");
+            return res.send({
+                status: "ERROR",
+                error_message: error_message
+            });
+        }
+
+        else if (!nameRegexp.test(employeeName)) {
+            error_message = "Employee name not valid.";
+            Logger.log("MBR", "[ValidationError] Employee name not valid - value passed from Employer. Name: ", employeeName);
+            return res.send({
+                status: "ERROR",
+                error_message: error_message
+            });
+        }
+        else if (isNaN(employee_salary) || parseFloat(employee_salary) < 0) {
+            error_message = "Employee salary not valid.";
+            Logger.log("MBR", "[ValidationError] Employee salary not valid - value passed from Employer. Salary: ", employee_salary);
+            return res.send({
+                status: "ERROR",
+                error_message: error_message
+            });
+        }
 
         MBR.findOne({ id: mortgageID }).exec(async function (err, data) {
             if (err) {
@@ -273,8 +335,31 @@ module.exports = {
         var mortgageID = req.param('MortID');
         var MlsID = req.param('MlsID');
         var name = req.param('FullName');
-        var deductible_value = parseFloat(req.param('DeductableValue'));
-        var insured_value = parseFloat(req.param('InsuredValue'));
+        var deductible_value = req.param('DeductableValue');
+        var insured_value = req.param('InsuredValue');
+        
+        // Check if all parameters are passed
+        if (mortgageID === undefined || MlsID === undefined || name === undefined || deductible_value === undefined
+            || insured_value === undefined){
+            error_message = "Please provide all parameters.";
+            Logger.log("MBR", "[ValidationError] All parameters not passed from INSinc");
+            return res.send([error_message]);
+        }
+
+        // Check if any parameter is not empty
+        else if (mortgageID == '' || MlsID == '' || name == '' || deductible_value == '' || insured_value == ''){
+            error_message = "Any parameter cannot be null.";
+            Logger.log("MBR", "[ValidationError] Empty value passed from INSinc");
+            return res.send([error_message]);
+        }
+
+        deductible_value = deductible_value.replace(",", "");
+        insured_value = insured_value.replace(",", "");
+        if (isNaN(deductible_value) || isNaN(insured_value) || parseFloat(deductible_value) < 0 || parseFloat(insured_value) < 0) {
+            error_message = "Deductible or insured value is wrong.";
+            Logger.log("MBR", "[ValidationError] Wrong deductible or insured value passed from INSinc. Deductible value: ", deductible_value, " Insured value: ", insured_value);
+            return res.send([error_message]);
+        }
 
         MBR.findOne({ id: mortgageID }).exec(async function (err, data) {
             if (err) {
