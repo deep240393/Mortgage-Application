@@ -1,6 +1,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
+        getData();
+    });
+
+    function getData() {
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -13,41 +17,68 @@
                 loadData(response)
             }
         });
-    });
+    }
+
     function loadData(response) {
         $('#RETable tbody').html("");
         var tbody = '';
-        console.log("response",response.data)
+        console.log("response", response.data)
         for (let index = 0; index < response.data.length; index++) {
             if (response.data[index] != null) {
-                tbody += '<tr> <form id="appraiserValue'+index+'"><td>' + response.data[index].MlsID + '</td>';
-                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value'+index+'"required></td>';
-                tbody += '<td><input type="submit" id="INSinc'+index+'"></td>';
-                tbody += '</tr></form>';
-                }
-                $("#appraiserValue"+index).submit(function(){
-                    console.log("ajax called");
-                    console.log("value entered",$("#value"+index).val());
-                    console.log("msid",response.data[index].MlsID);
-                    $.ajax({
-                        type: "POST",
-                        url: 'http://localhost:1337/updateREData',
-                        data:{
-                            'value':$("#value"+index).val(),
-                            'id': response.data[index].MlsID,
-                        },
-                        beforeSend:function(){
+                tbody += '<tr>><td>' + response.data[index].MlsID + '</td>';
+                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
+                tbody += '<td><input type="submit" id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
+                tbody += '</tr>';
+            }
+            $("#appraiserValue" + index).submit(function () {
+                console.log("ajax called");
+                console.log("value entered", $("#value" + index).val());
+                console.log("msid", response.data[index].MlsID);
 
-                        },
-                        success: function(response){
-                            //URL for UELI
-                            console.log("got response",response);
-                            alert("data saved"+ $("#value"+index).val());
-                        }
-                    })
-                })
+            })
         }
         $('#RETable tbody').append(tbody);
+    }
+
+
+    function updatedValue(row) {
+
+        var MSID = $(row).parent().siblings()[0].innerHTML;
+        var value = $($(row).parent().siblings()[1]).find('input').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:1337/updateREData',
+            data: {
+                'value': value,
+                'id': MSID,
+            },
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                    $.ajax({
+                    type: "POST",
+                    // UELI URL
+                    url: '',
+                    data: {
+                        'MlsID': response.MlsID,
+                        'MortID': response.MortgageID,
+                        'AppraisalValue':response.Value,
+                        'FullName':response.Name
+                    },
+                    async:false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+                        getData();
+
+                    }
+                });
+            }
+        })
     }
 </script>
 
