@@ -57,12 +57,32 @@ module.exports = {
     checkAppraisalCredentials: async function(req,res){
         console.log(req.body);
         var UserID = req.param("UserID");
-        var Password = req.param("Password");
+        var password = req.param("Password");
         var error_message = "";
         var auth = false;
+        var enctyptedPassword = '';
+
+        // encrypt the password which will be sent in request
+        if (password !== undefined && password != '') {
+            // http://codeniro.com/caesars-cipher-algorithm-javascript/
+
+            for (var i=0; i<password.length; i++) {
+                var c = password.charCodeAt(i);
+                if (c >=65 && c<=90) {
+                    enctyptedPassword += String.fromCharCode((c - 65 + 13) % 26 + 65);
+                }
+                else if (c >= 97 && c <= 122) {
+                    enctyptedPassword += String.fromCharCode((c - 97 + 13) % 26 + 97);
+                }
+                else {
+                    enctyptedPassword += password.charAt(i);
+                }
+            }
+        }
+
         Appraiser.findOne({
             UserID: UserID,
-            Password:Password
+            Password:enctyptedPassword
         }).exec(function(err,data){
             console.log(data);
             if(err){
