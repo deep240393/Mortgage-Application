@@ -50,6 +50,7 @@ module.exports.datastores = {
     *                                                                          *
     ********************************************
     *******************************/
+  /* 
   MbrDb: { 
     adapter: 'sails-mysql',
     host: 'nimbus06.mysql.database.azure.com',
@@ -76,6 +77,6 @@ module.exports.datastores = {
     password: 'Smit@1208',
     database: 'logs',
   },
-  
+  */
 
 };
