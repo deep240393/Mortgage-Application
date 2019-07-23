@@ -28,9 +28,9 @@ module.exports = {
 
         }
 
-        else if (isNaN(MlsID) ||  isNaN(MortgageID) ) {
+        else if (isNaN(MortgageID) ) {
             Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details MlsID and MortgageID should be number");
-            res.send({ error: 'MlsID and MortgageID should be a number' });
+            res.send({ error_message: 'MlsID and MortgageID should be a number' });
         }
         else
         {
@@ -44,7 +44,7 @@ module.exports = {
             if(err){
 
                 Logger.log("RealEstate Approval","[RegistrationError] Error in registering new applicant"+ Name);
-                return res.send({data: err});
+                return res.send({error_message: err});
             }
             else{
                 Logger.log("RealEstate Approval","[Success] New Application for "+ Name + " successfully created in RealEstate!");
@@ -93,7 +93,7 @@ module.exports = {
             }
             // send data if credentials are correct
             if (error_message == ''){
-
+                delete data['Password'];
                 Logger.log("RealEstate appraisal","[Success] Login Successful for user id : [ "+UserID+" ]");
                 return res.send({
                     data: data,

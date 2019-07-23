@@ -10,7 +10,7 @@ module.exports = {
   attributes: {
 
     MlsID:{
-      type: "number",
+      type: "string",
       required:true
     },
     Name:{
