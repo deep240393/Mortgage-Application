@@ -9,40 +9,61 @@ module.exports = {
 
   attributes: {
 
-  //   name:{
-  //     type: "string",
-  //     required:true
-  //   },
-  //   email:{
-  //     type:"string",
-  //     required:true
-  //   },
-  //   phone:{
-  //     type:"string",
-  //     required:true
-  //   },
-  //   mailing_address:{
-  //     type:"string",
-  //     required:true
-  //   },
-  //   employer_name:{
-  //     type:"string",
-  //     required:true
-  //   },
-  //   password:{
-  //     type:"string",
-  //     required:true
-  //   },
-  //   employment_duration:{
-  //     type:"string",
-  //   },
-  //   employee_salary:{
-  //     type:"string",
-  //   },
-  //   status:{
-  //     type:"string",
-  //   }
+    name:{
+      type: "string",
+      required:true
+    },
+    email:{
+      type:"string",
+      required:true
+    },
+    password:{
+      type:"string",
+      required:true
+    },
+    phone:{
+      type:"string",
+      required:true
+    },
+    mailing_address:{
+      type:"string",
+      required:true
+    },
+    employee_ID:{
+      type:"string",
+    },
+    employer_name:{
+      type:"string",
+      required:true
+    },
+    MlsID:{
+      type:"string",
+    },
+    mortgage_value:{
+      type:"string",
+    },
+    employment_duration:{
+      type:"string",
+    },
+    employee_salary:{
+      type:"string",
+    },
+    insured_value:{
+      type:"string",
+    },
+    deductible_value:{
+      type:"string",
+    },
+    EMP_confirmation:{
+      type:"string",
+    },
+    INSinc_confirmation:{
+      type:"string",
+    },
+    status:{
+      type:"string",
+    },
   },
-  // datastore: 'MbrDb'
+  datastore: 'MbrDb'
 };
 

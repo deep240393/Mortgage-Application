@@ -3,6 +3,34 @@
 
   // ajax function 
   $(document).ready(function () {
+                  $("#loginform").submit(function(e) {
+                      e.preventDefault();
+                      $.ajax({
+                          type : "POST",
+                          // web service url
+                          url:"http://localhost:3000/check_credentials",
+                          data : {
+                            "user_id":$("#user_id").val(),
+                            "password":$("#password").val(),
+                          },
+                          beforeSend : function() {
+                                
+                          },
+                          success : function(response) {
+                              console.log(response);
+                            
+                              if (response.error_message != ''){
+                                $("#resOutput").html(response.error_message);
+                              }
+                              else{
+                                localStorage.setItem("user_data",JSON.stringify(response));
+                                window.location.href = "ApplicationStatus";
+                              }
+                              
+                          }
+                      });
+                      e.preventDefault();
+                  });
 
     $("#loginform").submit(function (e) {
       e.preventDefault();
