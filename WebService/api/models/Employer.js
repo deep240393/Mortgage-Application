@@ -16,7 +16,7 @@ module.exports = {
       example: 'Code Inc.'
     },
 
-    userId: {
+    employeeID: {
       type: 'string',
       required: true,
       maxLength: 10,
