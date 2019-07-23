@@ -1,9 +1,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-      <script>
-          
-          // ajax function 
-          $(document).ready(function() {
+<script>
 
+  // ajax function 
+  $(document).ready(function () {
                   $("#loginform").submit(function(e) {
                       e.preventDefault();
                       $.ajax({
@@ -33,27 +32,63 @@
                       e.preventDefault();
                   });
 
-                  });
-    </script>
-  </head>
-  <body>
-    <div classs="row">
-        <div class="col-md-6 container jumbotron">
-            <center><h1 class="container">Login Form</h1></center><br>
-             <!-- Login form of MBR portal -->
-            <form method="post" id="loginform">
-                <div class="form-group">
-                    <label>Application ID</label>
-                    <input type="number" id="user_id" name="user_id" class="form-control"  placeholder="Enter confirmation ID of your application" required ><br>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" name="password" class="form-control"  minlength="8" placeholder="Enter your password" required >
-                </div>
-                <center><input type="submit" value="Sign In" class="btn btn-success"></center>
-              </form>
-        </div>
-        <div id="response" class="col-md-6 container">
-            <center><h2 id="resHeader"></h2></center>
-            <p id="resOutput"></p>  
-      </div>
+    $("#loginform").submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        // web service url
+        url: "https://webservicenimbus.herokuapp.com/check_credentials",
+        data: {
+          "user_id": $("#user_id").val(),
+          "password": $("#password").val(),
+        },
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+          console.log(response);
+
+          if (response.error_message != '') {
+            $("#resOutput").html(response.error_message);
+          }
+          else {
+            localStorage.setItem("user_data", JSON.stringify(response));
+            window.location.href = "ApplicationStatus";
+          }
+
+        }
+      });
+      e.preventDefault();
+    });
+
+  });
+</script>
+</head>
+
+<body>
+  <div classs="row">
+    <div class="col-md-6 container jumbotron">
+      <center>
+        <h1 class="container">Login Form</h1>
+      </center><br>
+      <!-- Login form of MBR portal -->
+      <form method="post" id="loginform">
+        <div class="form-group">
+          <label>Application ID</label>
+          <input type="number" id="user_id" name="user_id" class="form-control"
+            placeholder="Enter confirmation ID of your application" required><br>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" name="password" class="form-control" minlength="8"
+              placeholder="Enter your password" required>
+          </div>
+          <center><input type="submit" value="Sign In" class="btn btn-success"></center>
+      </form>
     </div>
+    <div id="response" class="col-md-6 container">
+      <center>
+        <h2 id="resHeader"></h2>
+      </center>
+      <p id="resOutput"></p>
+    </div>
+  </div>

@@ -22,6 +22,6 @@ module.exports = {
     },
 
   },
-  datastore: 'loggerDB'
+ datastore: 'loggerDB'
 };
 

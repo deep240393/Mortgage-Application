@@ -1,0 +1,97 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        getData();
+    });
+
+    function getData() {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:1337/getREData",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                loadData(response)
+            }
+        });
+    }
+
+    function loadData(response) {
+        $('#RETable tbody').html("");
+        var tbody = '';
+        console.log("response", response.data)
+        for (let index = 0; index < response.data.length; index++) {
+            if (response.data[index] != null) {
+                tbody += '<tr>><td>' + response.data[index].MlsID + '</td>';
+                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
+                tbody += '<td><input type="submit" id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
+                tbody += '</tr>';
+            }
+            $("#appraiserValue" + index).submit(function () {
+                console.log("ajax called");
+                console.log("value entered", $("#value" + index).val());
+                console.log("msid", response.data[index].MlsID);
+
+            })
+        }
+        $('#RETable tbody').append(tbody);
+    }
+
+
+    function updatedValue(row) {
+
+        var MSID = $(row).parent().siblings()[0].innerHTML;
+        var value = $($(row).parent().siblings()[1]).find('input').val();
+
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:1337/updateREData',
+            data: {
+                'value': value,
+                'id': MSID,
+            },
+            async: false,
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                    $.ajax({
+                    type: "POST",
+                    // UELI URL
+                    url: 'http://localhost:1337/insuranceQuote',
+                    data: {
+                        'MlsID': response.MlsID,
+                        'MortID': response.MortgageID,
+                        'AppraisalValue':response.Value,
+                        'FullName':response.Name
+                    },
+                    async:false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+                        getData();
+
+                    }
+                });
+            }
+        })
+    }
+</script>
+
+<div class="container">
+    <table class="table table-bordered" id="RETable">
+        <thead>
+            <tr>
+                <th scope="col">MSID</th>
+                <th scope="col">Value</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>

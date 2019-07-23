@@ -1,0 +1,74 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>         
+  // ajax function for Real Estate approval form
+  $(document).ready(function() {
+          $("#REApprovalForm").submit(function(e) {
+              e.preventDefault();
+              $.ajax({
+                  type : "POST",
+                  // Real estate web service url
+                  url:"http://localhost:1337/REApprovalForm",
+                  data : {
+                    "MlsID":$("#MlsID").val(),
+                    "Name":$("#Name").val(),
+                    "MortgageID":$("#MortgageID").val(),
+                  },
+                  beforeSend : function() {
+                        
+                  },
+                  success : function(response) {
+                      $("#REApprovalForm")[0].reset();
+                      $("#resMsg").html( 
+                        '<p class="alert alert-success">Your property details are successfully submitted for approval. Please check your MBR account for further updates.</p>');
+                  }
+              });
+              e.preventDefault();
+          });
+
+          });
+</script>
+<div class="container" style="background-color: blue; margin-top: 1%">
+    <div class = "jumbotron" style="background-color: lightgray">
+<h1 class="display-4 text-center">Approval Form</h1>
+<div class="row text-center">
+
+        <!-- COLUMN 1 -->
+        <div class="col-sm-4"></div>
+      
+        <!-- COLUMN 2 -->
+        <div class="col-sm-4">
+      
+            <form id="REApprovalForm">
+
+                <p class="text-center" id="user" name="user"></p>
+                <div class="form-group">
+                  <label><strong style="font-size: 20px">MlsID:</strong></label>
+                  <input type="number" name="MlsID" class="form-control" id="MlsID" required>
+                </div>
+                <div class="form-group">
+                  <label><strong  style="font-size: 20px">Name:</strong></label>
+                  <input type="text" name="Name" class="form-control" id="Name" required>
+                  <p class="text-danger" id="linkTest"></p>
+                </div>
+                <div class="form-group">
+                    <label><strong id="MID" style="font-size: 20px">MortgageID:</strong></label>
+                    <input type="number" name="MortgageID" class="form-control" id="MortgageID" required>
+                  </div>
+                <button type="submit" class="btn btn-primary">Agree</button>
+              </form>
+              <br>
+              <div id="resMsg">
+
+              </div>
+      
+        </div>
+      
+        <!-- COLUMN 3 -->
+        <div class="col-sm-4"></div>
+        <!--Login FORM-->
+      
+      </div>
+      
+</div>
+</div>
+</div>
