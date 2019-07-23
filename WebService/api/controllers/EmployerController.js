@@ -18,6 +18,25 @@ module.exports = {
 
         var id = req.param('id');
         var password = req.param('pwd');
+        var enctyptedPassword = '';
+
+        // encrypt the password which will be sent in request
+        if (password !== undefined && password != '') {
+            // http://codeniro.com/caesars-cipher-algorithm-javascript/
+
+            for (var i=0; i<password.length; i++) {
+                var c = password.charCodeAt(i);
+                if (c >=65 && c<=90) {
+                    enctyptedPassword += String.fromCharCode((c - 65 + 13) % 26 + 65);
+                }
+                else if (c >= 97 && c <= 122) {
+                    enctyptedPassword += String.fromCharCode((c - 97 + 13) % 26 + 97);
+                }
+                else {
+                    enctyptedPassword += password.charAt(i);
+                }
+            }
+        }
 
         if (id === undefined ||  password === undefined ) {
 
@@ -33,7 +52,7 @@ module.exports = {
         else
         {
 
-        Employer.findOne({ employeeID: id, userPassword: password}).exec(function(err,employee){
+        Employer.findOne({ employeeID: id, userPassword: enctyptedPassword}).exec(function(err,employee){
 
             //Database error
             if(err){

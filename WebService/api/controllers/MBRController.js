@@ -21,9 +21,30 @@ module.exports = {
         var employee_ID = req.param('employee_ID');
         var mortgage_value = req.param('mortgage_value');
         var MlsID = req.param('MlsID');
+        var enctyptedPassword = '';
 
         if (mortgage_value !== undefined && mortgage_value != '') {
             mortgage_value = mortgage_value.replace(",", "");   // remove commas from value
+        }
+
+        // encrypt the password. It is encrypted by Caesar cipher algorithm.
+        // The key is 13.
+        if (password !== undefined && password != '') {
+            // http://codeniro.com/caesars-cipher-algorithm-javascript/
+
+            for (var i=0; i<password.length; i++) {
+                var c = password.charCodeAt(i);
+
+                if (c >=65 && c<=90) {
+                    enctyptedPassword += String.fromCharCode((c - 65 + 13) % 26 + 65);
+                }
+                else if (c >= 97 && c <= 122) {
+                    enctyptedPassword += String.fromCharCode((c - 97 + 13) % 26 + 97);
+                }
+                else {
+                    enctyptedPassword += password.charAt(i);
+                }
+            }
         }
 
         // https://stackoverflow.com/a/46181/8243992
@@ -65,7 +86,7 @@ module.exports = {
                 phone: phone,
                 mailing_address: address,
                 employer_name: employer,
-                password: password,
+                password: enctyptedPassword,
                 employee_ID: employee_ID,
                 MlsID: MlsID,
                 mortgage_value: mortgage_value,
@@ -81,11 +102,12 @@ module.exports = {
 
                 var fetch_data = await MBR.findOne({
                     name: name, email: email, phone: phone, mailing_address: address,
-                    employer_name: employer, password: password, employee_ID: employee_ID, MlsID: MlsID,
+                    employer_name: employer, password: enctyptedPassword, employee_ID: employee_ID, MlsID: MlsID,
                     mortgage_value: mortgage_value, status: "pending"
                 }, function (err, row) {
 
                     Logger.log("MBR", "[Success] New Application for " + name + " successfully created in MBR!");
+                    delete row['password'];   // remove password from row because it should not be returned to frontend
                     return res.send({ data: row });
                 });
             });
@@ -98,9 +120,28 @@ module.exports = {
         var user_id = req.param("user_id");
         var password = req.param("password");
         var error_message = '';
+        var enctyptedPassword = '';
+
+        // encrypt the password which will be sent in request
+        if (password !== undefined && password != '') {
+            // http://codeniro.com/caesars-cipher-algorithm-javascript/
+
+            for (var i=0; i<password.length; i++) {
+                var c = password.charCodeAt(i);
+                if (c >=65 && c<=90) {
+                    enctyptedPassword += String.fromCharCode((c - 65 + 13) % 26 + 65);
+                }
+                else if (c >= 97 && c <= 122) {
+                    enctyptedPassword += String.fromCharCode((c - 97 + 13) % 26 + 97);
+                }
+                else {
+                    enctyptedPassword += password.charAt(i);
+                }
+            }
+        }
 
         // Check credentials
-        MBR.findOne({ id: user_id, password: password }).exec(function (err, data) {
+        MBR.findOne({ id: user_id, password: enctyptedPassword }).exec(function (err, data) {
             if (err) {
                 error_message = "Something went wrong while fetching data.";
                 Logger.log("MBR", "[Service Down]" + error_message);
