@@ -26,7 +26,7 @@
         for (let index = 0; index < response.data.length; index++) {
             if (response.data[index] != null) {
                 tbody += '<tr>><td>' + response.data[index].MlsID + '</td>';
-                tbody += '<td><input type="text" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
+                tbody += '<td><input type="number" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
                 tbody += '<td><input type="submit" id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
                 tbody += '</tr>';
             }
@@ -58,24 +58,29 @@
 
             },
             success: function (response) {
+                if (response['error_message']) {
+                    alert(response['error_message']);
+                }
+                else {
                     $.ajax({
-                    type: "POST",
-                    // UELI URL
-                    url: 'http://localhost:3000/insuranceQuote',
-                    data: {
-                        'MlsID': response.MlsID,
-                        'MortID': response.MortgageID,
-                        'AppraisalValue':response.Value,
-                        'FullName':response.Name
-                    },
-                    async:false,
-                    beforeSend: function () {
+                        type: "POST",
+                        // UELI URL
+                        url: 'http://localhost:3000/insuranceQuote',
+                        data: {
+                            'MlsID': response.MlsID,
+                            'MortID': response.MortgageID,
+                            'AppraisalValue': response.Value,
+                            'FullName': response.Name
+                        },
+                        async: false,
+                        beforeSend: function () {
 
-                    },
-                    success: function (response) {
-                        location.reload();
-                    }
-                });
+                        },
+                        success: function (response) {
+                            location.reload();
+                        }
+                    });
+                }
             }
         })
     }

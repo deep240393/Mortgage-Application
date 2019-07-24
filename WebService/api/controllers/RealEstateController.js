@@ -15,6 +15,7 @@ module.exports = {
         var MlsID = req.param('MlsID');
         var Name = req.param('Name');
         var MortgageID= req.param('MortgageID');
+        const nameRegexp = /^[A-Za-z\s]+$/;
         
         if (MlsID === undefined || Name === undefined || MortgageID=== undefined) {
 
@@ -29,8 +30,12 @@ module.exports = {
         }
 
         else if (isNaN(MortgageID) ) {
-            Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details MlsID and MortgageID should be number");
-            res.send({ error_message: 'MlsID and MortgageID should be a number' });
+            Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details MortgageID should be number");
+            res.send({ error_message: 'MortgageID should be a number' });
+        }
+        else if (!nameRegexp.test(Name.toLowerCase())) {
+            Logger.log("RealEstate approval form","[ValidationError] Name is not valid. Passed name: ", Name);
+            res.send({ error_message: 'Name is not valid' });
         }
         else
         {
@@ -128,6 +133,21 @@ module.exports = {
     updateREData: function(req,res){
         var value = req.param("value");
         var id = req.param('id');
+
+        if (value !== undefined && value != '') {
+            value = value.replace(",", "");   // remove commas from value
+        }
+
+        if (value === undefined || value == '') {
+            Logger.log("RE","[UpdateError] Appraiser didn't pass value");
+            return res.send({error_message: "Please pass value"});
+        }
+
+        else if (isNaN(value) || parseFloat(value) < 0) {
+            Logger.log("RE", "[UpdateError] Value not valid.");
+            return res.send({ error_message: "Value not valid" });
+        }
+
         RealEstate.updateOne({
             //Value:value
             MlsID:id
