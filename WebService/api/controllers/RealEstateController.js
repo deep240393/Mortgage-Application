@@ -120,11 +120,12 @@ module.exports = {
         RealEstate.find({"Value":0}).exec(function(err,data){
             if(err){
                 error_message = "Something went wrong while fetching data.";
-                return res.send({data:err})
+                return res.send({data:err, errorPresent: true})
             }
             else{
                 return res.send({
-                    data:data
+                    data:data,
+                    errorPresent: false
                 })
             }
         })

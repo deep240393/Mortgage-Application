@@ -14,7 +14,13 @@
 
             },
             success: function (response) {
-                loadData(response)
+                if (response['errorPresent']) {
+                    alert('Something went wrong while fetching data.');
+                    window.location.href = "/";    
+                }
+                else {
+                    loadData(response['data']);
+                }   
             },
             error: function() {
                 alert('We are facing server issue. Please try again later.');
@@ -26,10 +32,10 @@
     function loadData(response) {
         $('#RETable tbody').html("");
         var tbody = '';
-        console.log("response", response.data)
-        for (let index = 0; index < response.data.length; index++) {
-            if (response.data[index] != null) {
-                tbody += '<tr>><td>' + response.data[index].MlsID + '</td>';
+        // console.log("response", response)
+        for (let index = 0; index < response.length; index++) {
+            if (response[index] != null) {
+                tbody += '<tr>><td>' + response[index].MlsID + '</td>';
                 tbody += '<td><input type="number" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
                 tbody += '<td><input type="submit" id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
                 tbody += '</tr>';
@@ -37,7 +43,7 @@
             $("#appraiserValue" + index).submit(function () {
                 console.log("ajax called");
                 console.log("value entered", $("#value" + index).val());
-                console.log("msid", response.data[index].MlsID);
+                console.log("msid", response[index].MlsID);
 
             })
         }
