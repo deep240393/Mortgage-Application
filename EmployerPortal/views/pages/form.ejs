@@ -66,11 +66,11 @@
         success: function(data){
 
           console.log("[retreiveData] Success");
-          if (data.error_message == 'Success'){
-            submitEmployeeToBrocker(e, data.Employee);
+          if (data['ErrorMessage'] == 'Success'){
+            submitEmployeeToBrocker(e, data['Employee']);
           }
           else {
-            alert(data.error_message);
+            alert(data['ErrorMessage']);
           }
 
         },
