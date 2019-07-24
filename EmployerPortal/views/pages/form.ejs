@@ -70,6 +70,7 @@
 
         },
         error: function(error){
+            $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
             console.log("[retreiveData] Error occured");
             console.log(error);
         }

@@ -91,6 +91,8 @@
             error: function(error){
                 console.log("[authorizeUser] Error occured");
                 console.log(error);
+                alert('We are facing server issue. Please try again later.');
+                window.location.href = "/";
             }
         });
 
