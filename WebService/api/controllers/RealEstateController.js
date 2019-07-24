@@ -149,16 +149,21 @@ module.exports = {
             return res.send({ error_message: "Value not valid" });
         }
 
-        RealEstate.updateOne({
+        RealEstate.update({
             //Value:value
             MlsID:id
         }).set({Value:value}).exec(function(err,data){
             if(err){
                 return res.send({data:err})
             }else{
+                
                 console.log(value);
                 console.log(id);
-                return res.send(data)
+                // send all the values of each Mlsid which are updated by the appraiser
+                RealEstate.find({MlsID:id}).exec(function(err,data){
+                    return res.send(data)
+                })
+                
             }
         })
     }
