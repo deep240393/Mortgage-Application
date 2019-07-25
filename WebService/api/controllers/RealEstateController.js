@@ -45,11 +45,12 @@ module.exports = {
             MlsID:MlsID,
             Name:Name,
             MortgageID:MortgageID,
-        }, async function(err, REApprovalFormData){
+        }, function(err, REApprovalFormData){
             if(err){
-
+                // checking if user has made any error while registering
                 Logger.log("RealEstate Approval","[RegistrationError] Error in registering new applicant"+ Name);
-                return res.send({error_message: err});
+                console.log("unique value",err);
+                return res.send({error_message: "Error in registering new applicant. Please check your Mortgage ID and other details"});
             }
             else{
                 Logger.log("RealEstate Approval","[Success] New Application for "+ Name + " successfully created in RealEstate!");

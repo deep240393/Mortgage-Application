@@ -19,7 +19,8 @@ module.exports = {
     },
     MortgageID:{
       type:"number",
-      required:true
+      required:true,
+      unique:true
     },
     Value:{
       type:"number"
