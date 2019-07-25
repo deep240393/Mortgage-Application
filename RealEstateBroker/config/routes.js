@@ -23,6 +23,7 @@ module.exports.routes = {
   '/ApprovalForm':{view: 'pages/ApprovalForm'},
   '/ApprisalForm':{view: 'pages/ApprisalForm'},
   '/Appraiser':{view: 'pages/Appraiser'},
+  '/homepage' :{view:'pages/homepage'},
 
 
   /***************************************************************************
