@@ -55,7 +55,6 @@ module.exports = {
 
 
             Employer.findOne({ employeeID: id }).exec(function (err, employee) {
-                console.log("herehehe")
                 //Database error
                 if (err) {
 
