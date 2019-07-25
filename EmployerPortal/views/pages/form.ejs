@@ -53,9 +53,14 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script type="text/javascript">
-
+  $(document).ready(function(){
+    setTimeout(function(){
+       alert("Session Expired"); 
+       window.location.href="/";
+      }, 36000);
+  });
   (function ($) {
-
+    
     function retrieveEmployeeData(e) {
       console.log("[retrieveEmployeeData] Function Called");
       var userId = $('#user').text();
@@ -78,7 +83,6 @@
           console.log(error);
         }
       });
-
       //prevent the error from taking the user from the default page
       e.preventDefault();
     }
