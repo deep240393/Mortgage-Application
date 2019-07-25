@@ -30,8 +30,8 @@ module.exports.routes = {
   'POST /updateREData': 'RealEstateController.updateREData',
   'POST /insuranceUpdate': 'MBRController.insuranceUpdate',
   'POST /insuranceQuote': 'INSincController.insuranceQuote',
-  '/ApplicationStatus': { view: 'pages/ApplicationStatus' }
-
+  '/ApplicationStatus': { view: 'pages/ApplicationStatus' },
+  'POST /getMortgageId': 'MBRController.getMortgageId',
 
   /***************************************************************************
   *                                                                          *

@@ -7,6 +7,51 @@
 
 var Logger = require('./LoggerController');
 
+
+function generateId(length){
+
+    //Resource: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/math/random
+
+    //var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var characters = 'ADL';
+    var result = '';
+
+    for(var i = 0; i < length; i++){
+
+        var randomIndex = Math.floor( Math.random() * characters.length )
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+}
+
+
+async function findMorgageId(value){
+    
+    var exists = false;
+    console.log("value: " + value);
+
+    await MBR.find({ employer_name: value})
+    .then(async function (data) {
+
+        if(data == null){
+            console.log("Info: User is unique [data]: " + data)
+            exists = false;
+            return false;
+        }else{
+            console.log("Info: id already exists [data]: " + data)
+            exists = true;
+            return true;
+        }
+
+    })
+    .catch(async function(err) {
+        console.log("Error: " + err);
+    })
+    
+    //return exists;
+}
+
 module.exports = {
 
     newApplication: async function (req, res) {
@@ -507,21 +552,25 @@ module.exports = {
         });
     },
 
-    /*
-    @CHINTAN - FOR REFERENCE ONLY - I/O FOR INSINC TO MBR - DELETE WHEN NO LONGER NEEDED 
-    
-    insuranceUpdate: function(req, res){
+    getMortgageId: async function(req, res){
 
-        var mortId = req.param('MortID');
-        var mlsId = req.param('MlsID');
-        var fullname = req.param('FullName');
-        var deductableValue = parseFloat( req.param('DeductableValue') );
-        var insuredValue = parseFloat( req.param('InsuredValue') );
+        console.log("*********************************");
+
+        //---------------------------------------------
         
+        var newId = generateId(3);
+        
+        var exists = await findMorgageId(newId);
+        console.log("User Exists: " + exists);
+        
+        //---------------------------------------------
+        var echo = newId;
+        console.log("Info: Id is returned as " + echo);
 
-        //if everything is successfull, return ok. Otherwise, return res.send("[errorstring]" or something similar);
-        return res.ok();
+        return res.send(["ID: " + echo]);
     },
-    */
+
+    
+
 };
 
