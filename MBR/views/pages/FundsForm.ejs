@@ -29,10 +29,12 @@
                             }
                             else {
                               $("#fundsform")[0].reset();
-                              $("#showApplicationID").html('<p>Thanks for submitting application</p>' +
-                                'Your application ID: ' + response.data.id);
-                              $("#showApplicationLink").html('Your application URL: http://localhost:3000' + 
-                                '<p>You need to submit details to your employer portal to approve the application.</p>' +
+                              $("#showApplicationID").html('<p><strong>Thanks for submitting application.</strong></p>' +
+                                '<strong> Application ID: </strong>' + response.data.id + 
+                                '<p><strong> Mortgage ID: </strong>' + response.data.mortgage_ID + '</p>' +
+                                '<strong>Application URL: </strong>http://localhost:3000');
+                              $("#showApplicationLink").html('<strong>Instructions : </strong>' +
+                                '<p>You need to submit details to your employer portal and Real Estate portal to approve the application.</p>' +
                                 '<p>You can check application status by logging in to our portal.</p>');
                             }
                           },
@@ -43,6 +45,7 @@
                       e.preventDefault();
                   });
 
+                  
                   });
     </script>
   </head>

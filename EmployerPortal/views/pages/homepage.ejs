@@ -56,10 +56,6 @@
     var userId = document.getElementById("id").value;
     var userPassword = document.getElementById("pwd").value;
 
-    // console.log("User: " + userId);
-    // console.log("Password: " + userPassword);
-
-
     //package the data
     var myData = { id: userId, pwd: userPassword };
 
@@ -76,9 +72,10 @@
               if(data.Authorized == true){
 
                 console.log("[authorizeUser] Authorized TRUE");
-                console.log("token",data.Token )
-                window.location.assign("/form?id="+userId);
-                sessionStorage.setItem("Token",data.Token)
+             
+                window.location.assign("/form?id="+userId+"&userFirstName="+data.Employee['userFirstName']+"&userLastName="+data.Employee['userLastName']);
+                sessionStorage.setItem("Token",data.Token);
+                sessionStorage.setItem("StartTime", Date.now());
 
               //User is not Authorized
               }else if(data.Authorized == false){

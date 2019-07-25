@@ -1,6 +1,8 @@
 <div class="container" style="background-color: blue; margin-top: 1%">
   <div class="jumbotron" style="background-color: lightgray">
-
+    <div style="text-align:right">
+      Welcome <%=req.session.firstName%> <%=req.session.lastName%>
+    </div>
 
     <h1 class="display-4 text-center">Mortgage Form</h1>
 
@@ -16,15 +18,15 @@
 
         <form id="kemcho">
 
-          <p class="text-center" id="user" name="user"><%=req.session.userid%></p>
+          
           <div class="form-group">
             <label for="mid"><strong id="MID" style="font-size: 20px">Mortgage Id:</strong></label>
-            <input type="number" name="mid" class="form-control" id="mid" required>
+            <input type="text" name="mid" class="form-control" id="mid" placeholder="Enter your mortgageID" required>
           </div>
 
           <div class="form-group">
             <label for="lnk"><strong id="LNK" style="font-size: 20px">Link:</strong></label>
-            <input type="lnk" name="lnk" class="form-control" id="lnk" required>
+            <input type="lnk" name="lnk" class="form-control" id="lnk" placeholder="Link provided by broker" required>
             <p class="text-danger" id="linkTest"></p>
           </div>
 
@@ -53,12 +55,6 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
-    setTimeout(function(){
-       alert("Session Expired"); 
-       window.location.href="/";
-      }, 36000);
-  });
   (function ($) {
     
     function retrieveEmployeeData(e) {
@@ -96,6 +92,13 @@
 
       console.log("[submitEmployeeToBrocker] Function Called");
 
+      var startTime = parseFloat(sessionStorage.getItem( 'StartTime'));
+
+      if(Date.now() > startTime + 60000) {
+        alert("Your token has been expired. Please login again.");
+        window.location.href = "/";
+      }
+
       var mortgageID = $('#mid').val();
       var webserviceurl = $('#lnk').val();
       var token = sessionStorage.getItem('Token');
@@ -121,8 +124,6 @@
         crossDomain: true,
         success: function (data) {
 
-
-
           if (data.status == "ERROR") {
             $("#result").html("Error : " + data.error_message);
           }
@@ -137,6 +138,7 @@
           $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
           console.log("[submitEmployeeToBrocker] Error occured");
           console.log(error);
+
         }
       });
 

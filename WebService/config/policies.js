@@ -22,6 +22,16 @@ module.exports.policies = {
     'authenticate': true, // We dont need authorization here, allowing public access
     'retrieveData': true // We dont need authorization here, allowing public access
   },
+  'MBRController':
+  {
+    'newApplication':true,
+    'check_credentials':true,
+    'validateApplication':['isAuthorized'],
+    'insuranceUpdate':true,
+  },
+  'LoggerController':{'*':true},
+  'RealEstateController':{'*':true},
+  'INSincController':{'*':true}
 
 
 };

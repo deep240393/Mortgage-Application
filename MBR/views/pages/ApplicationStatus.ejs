@@ -17,6 +17,7 @@
         document.getElementById('Employer').innerHTML = data.data.employer_name;
         document.getElementById('MlsID').innerHTML = data.data.MlsID;
         document.getElementById('mortgage_value').innerHTML = data.data.mortgage_value;
+        document.getElementById('mortgage_ID').innerHTML = data.data.mortgage_ID;
 
         // update application status
         if (data.data.status == 'accepted'){
@@ -77,6 +78,10 @@
                 <div class="form-group">
                     <b><label>Name</label></b><br>
                     <label id="Name" name="Name"></label>
+                </div>
+                <div class="form-group">
+                    <b><label>Mortgage ID</label></b><br>
+                    <label id="mortgage_ID" name="mortgage_ID"></label>
                 </div>
                 <div class="form-group">
                     <b><label>Mailing Address</label></b><br>

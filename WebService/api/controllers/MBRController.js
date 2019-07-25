@@ -45,12 +45,8 @@ async function generateIdUniqueMortgageId(length){
     var isUnique = false;
 
     while(isUnique == false){
-
         id = generateId(length);
-        //console.log("Created id: " + id);
-
         isUnique = await isUniqueMortgageId(id);
-        //console.log("Is Unique: " + isUnique);
     }
 
     return id;
@@ -73,6 +69,14 @@ module.exports = {
         var MlsID = req.param('MlsID');
         var enctyptedPassword = '';
         var mortgageID = generateIdUniqueMortgageId(8);
+        
+
+        await mortgageID.then(function(result) {
+            mortgageID = result
+    
+         })
+
+       
 
         if (mortgage_value !== undefined && mortgage_value != '') {
             mortgage_value = mortgage_value.replace(",", "");   // remove commas from value
@@ -193,7 +197,7 @@ module.exports = {
         }
 
         // Check credentials
-        MBR.findOne({ id: user_id, password: enctyptedPassword }).exec(function (err, data) {
+        MBR.findOne({ mortgage_ID: user_id, password: enctyptedPassword }).exec(function (err, data) {
             if (err) {
                 error_message = "Something went wrong while fetching data.";
                 Logger.log("MBR", "[Service Down]" + error_message);
@@ -208,7 +212,7 @@ module.exports = {
                 Logger.log("MBR", "[Success] Login Successful for user id : [ " + user_id + " ]");
                 return res.send({
                     data: {
-                        id: data.id, name: data.name, email: data.email, phone: data.phone,
+                        id: data.id, mortgage_ID: data.mortgage_ID, name: data.name, email: data.email, phone: data.phone,
                         mailing_address: data.mailing_address, employer_name: data.employer_name,
                         status: data.status, MlsID: data.MlsID, mortgage_value: data.mortgage_value,
                         employment_duration: data.employment_duration, employee_salary: data.employee_salary,
@@ -282,7 +286,7 @@ module.exports = {
             });
         }
 
-        MBR.findOne({ id: mortgageID }).exec(async function (err, data) {
+        MBR.findOne({ mortgage_ID: mortgageID }).exec(async function (err, data) {
             if (err) {
                 // database connection error. Log error
                 error_message = "Something went wrong while fetching data.";
@@ -303,12 +307,12 @@ module.exports = {
             }
             else {
                 // id is matched
-                var check_application = await MBR.findOne({ id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: 'pending' });
+                var check_application = await MBR.findOne({ mortgage_ID: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name, status: 'pending' });
                 if (!check_application) {
-                    var check_status = await MBR.findOne({ id: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name });
+                    var check_status = await MBR.findOne({ mortgage_ID: mortgageID, name: employeeName, employee_ID: employee_ID, employer_name: employer_name });
                     if (!check_status && data.EMP_confirmation != 'true') {
                         // wrong data is submitted. Reject the application
-                        var reject_application = await MBR.updateOne({ id: mortgageID }).set({ status: 'rejected' });
+                        var reject_application = await MBR.updateOne({ mortgage_ID: mortgageID }).set({ status: 'rejected' });
                         if (!reject_application) {
                             // database connection error. Log error
                             error_message = "Something went wrong while rejecting application.";
@@ -373,7 +377,7 @@ module.exports = {
                     else {
                         if (check_application.INSinc_confirmation == 'true') {
                             // if data from INSinc is also validated, accept the application.
-                            var updateData = await MBR.updateOne({ id: mortgageID, name: employeeName, employer_name: employer_name })
+                            var updateData = await MBR.updateOne({ mortgage_ID: mortgageID, name: employeeName, employer_name: employer_name })
                                 .set({ employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true', status: 'accepted' });
                             if (!updateData) {
                                 // This loop will only be reached if service is down
@@ -396,7 +400,7 @@ module.exports = {
                         }
                         else {
                             // if data from INSinc is not validated yet, just update MBR table.
-                            var updateData = await MBR.updateOne({ id: mortgageID, name: employeeName, employer_name: employer_name })
+                            var updateData = await MBR.updateOne({ mortgage_ID: mortgageID, name: employeeName, employer_name: employer_name })
                                 .set({ employment_duration: employment_duration, employee_salary: employee_salary, EMP_confirmation: 'true' });
                             if (!updateData) {
                                 // This loop will only be reached if service is down

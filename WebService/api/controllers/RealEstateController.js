@@ -29,10 +29,6 @@ module.exports = {
 
         }
 
-        else if (isNaN(MortgageID) ) {
-            Logger.log("RealEstate approval form","[ValidationError] Real estate approval form details MortgageID should be number");
-            res.send({ error_message: 'MortgageID should be a number' });
-        }
         else if (!nameRegexp.test(Name.toLowerCase())) {
             Logger.log("RealEstate approval form","[ValidationError] Name is not valid. Passed name: ", Name);
             res.send({ error_message: 'Name is not valid' });

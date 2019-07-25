@@ -79,8 +79,8 @@ module.exports = {
                         Logger.log("Employer", "[Authentication] Employee successfully found in Employer database");
                         //password is a match
                         authorized = true,
-                            employee = employee,
-                            token = jwToken.sign(employee)
+                        employee = employee,
+                        token = jwToken.sign(employee)
                     }
 
                 }
