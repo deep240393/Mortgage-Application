@@ -7,7 +7,7 @@
 
 var Logger = require('./LoggerController');
 
-
+//suporter function for generating unqiue mortgage id
 function generateId(length){
 
     //Resource: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/math/random
@@ -25,31 +25,34 @@ function generateId(length){
     return result;
 }
 
-
-async function findMorgageId(value){
+//suporter function for generating unqiue mortgage id
+async function isUniqueMortgageId(value){
     
-    var exists = false;
-    console.log("value: " + value);
-
-    await MBR.find({ employer_name: value})
-    .then(async function (data) {
-
-        if(data == null){
-            console.log("Info: User is unique [data]: " + data)
-            exists = false;
-            return false;
-        }else{
-            console.log("Info: id already exists [data]: " + data)
-            exists = true;
-            return true;
-        }
-
-    })
-    .catch(async function(err) {
-        console.log("Error: " + err);
-    })
+    var records = await MBR.find({ employer_name: value });
     
-    //return exists;
+    if(records.length == 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+//This will generate a unqie mortgageId which is not currently in database
+async function generateIdUniqueMortgageId(length){
+
+    var id = '';
+    var isUnique = false;
+
+    while(isUnique == false){
+
+        id = generateId(length);
+        //console.log("Created id: " + id);
+
+        isUnique = await isUniqueMortgageId(id);
+        //console.log("Is Unique: " + isUnique);
+    }
+
+    return id;
 }
 
 module.exports = {
@@ -557,15 +560,12 @@ module.exports = {
         console.log("*********************************");
 
         //---------------------------------------------
-        
-        var newId = generateId(3);
-        
-        var exists = await findMorgageId(newId);
-        console.log("User Exists: " + exists);
+
+        var mortgageIdLength = 3;
+        var echo = await generateIdUniqueMortgageId(mortgageIdLength)
+        console.log("The new unique id is: " + echo);
         
         //---------------------------------------------
-        var echo = newId;
-        console.log("Info: Id is returned as " + echo);
 
         return res.send(["ID: " + echo]);
     },
