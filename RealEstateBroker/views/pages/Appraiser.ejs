@@ -32,6 +32,7 @@
     function loadData(response) {
         $('#RETable tbody').html("");
         var tbody = '';
+        if(response.length!=0){
         // console.log("response", response)
         for (let index = 0; index < response.length; index++) {
             if (response[index] != null) {
@@ -47,6 +48,12 @@
 
             })
         }
+    }
+    else{
+        tbody += '<tr>';
+        tbody += '<td align="center" colspan=3><b>No records found</b></td>';
+        tbody += '</tr>';
+    }
         $('#RETable tbody').append(tbody);
     }
 
