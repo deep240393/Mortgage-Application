@@ -72,24 +72,30 @@
                     alert(response['error_message']);
                 }
                 else {
-                    $.ajax({
-                        type: "POST",
-                        // UELI URL
-                        url: 'http://localhost:3000/insuranceQuote',
-                        data: {
-                            'MlsID': response.MlsID,
-                            'MortID': response.MortgageID,
-                            'AppraisalValue': response.Value,
-                            'FullName': response.Name
-                        },
-                        async: false,
-                        beforeSend: function () {
+                    response.forEach(element => {
+                        $.ajax({
+                            type: "POST",
+                            // UELI URL
+                            url: 'http://localhost:3000/insuranceQuote',
+                            data: {
+                                'MlsID': element.MlsID,
+                                'MortID': element.MortgageID,
+                                'AppraisalValue': element.Value,
+                                'FullName': element.Name
+                            },
+                            async: false,
+                            beforeSend: function () {
 
-                        },
-                        success: function (response) {
-                            location.reload();
-                        }
+                            },
+                            success: function(INSincResponse) {
+                                console.log("INSincResponse: ", INSincResponse);
+                            },
+                            error: function(error){
+                                console.log("Error: ", error);
+                            }
+                        }); 
                     });
+                    location.reload();
                 }
             },
             error: function() {
