@@ -7,14 +7,12 @@
 
 var Logger = require('./LoggerController');
 
-var exists = false;   // This variable will be changed to true if user exists in database.
-
+//suporter function for generating unqiue mortgage id
 function generateId(length){
 
     //Resource: https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/math/random
 
-    //var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var characters = 'ADL';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var result = '';
 
     for(var i = 0; i < length; i++){
@@ -26,33 +24,38 @@ function generateId(length){
     return result;
 }
 
-
-async function findMorgageId(value){
-    console.log("value: " , value);
-
-    await MBR.find({ employer_name: value})
-    .then(async function (data) {
-        console.log("DATA: ", data);
-        if(data.length == 0){
-            console.log("Info: User is not unique [data]: " , data)
-            exists = false;
-
-            // @Ueli: removed return from here as it was having no meaning. 
-            // The return was being performed on the function which calls it. 
-            // And the callee function is the function on line 33 and not the find. We cannot handle that return.
-            // Thus for a solution, I made 'exists' variable as global which will be changed
-            // if user already exists.
-        }else{
-            console.log("Info: id already exists [data]: " , data)
-            exists = true;
-        }
-
-    })
-    .catch(async function(err) {
-        console.log("Error: " + err);
-    })
-    //return exists;
+//suporter function for generating unqiue mortgage id
+async function isUniqueMortgageId(value){
+    
+    var records = await MBR.find({ employer_name: value });
+    
+    if(records.length == 0){
+        return true;
+    }else{
+        return false;
+    }
 }
+
+//This will generate a unqie mortgageId which is not currently in database
+//@param length: length of MortgageId
+//call with: var x = await generateIdUniqueMortgageId(mortgageIdLength)
+async function generateIdUniqueMortgageId(length){
+
+    var id = '';
+    var isUnique = false;
+
+    while(isUnique == false){
+
+        id = generateId(length);
+        //console.log("Created id: " + id);
+
+        isUnique = await isUniqueMortgageId(id);
+        //console.log("Is Unique: " + isUnique);
+    }
+
+    return id;
+}
+
 
 module.exports = {
 
@@ -553,26 +556,6 @@ module.exports = {
             }
         });
     },
-
-    getMortgageId: async function(req, res){
-
-        console.log("*********************************");
-
-        //---------------------------------------------
-        
-        var newId = generateId(3);
-        
-        await findMorgageId(newId);
-        console.log("User Exists: " , exists);
-        
-        //---------------------------------------------
-        var echo = newId;
-        console.log("Info: Id is returned as " , echo);
-
-        return res.send(["ID: " + echo]);
-    },
-
-    
 
 };
 
