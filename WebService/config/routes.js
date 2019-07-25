@@ -31,7 +31,7 @@ module.exports.routes = {
   'POST /insuranceUpdate': 'MBRController.insuranceUpdate',
   'POST /insuranceQuote': 'INSincController.insuranceQuote',
   '/ApplicationStatus': { view: 'pages/ApplicationStatus' },
- 
+
 
   /***************************************************************************
   *                                                                          *
