@@ -76,8 +76,9 @@
               if(data.Authorized == true){
 
                 console.log("[authorizeUser] Authorized TRUE");
-                
+                console.log("token",data.Token )
                 window.location.assign("/form?id="+userId);
+                sessionStorage.setItem("Token",data.Token)
 
               //User is not Authorized
               }else if(data.Authorized == false){

@@ -1,98 +1,103 @@
 <div class="container" style="background-color: blue; margin-top: 1%">
-        <div class = "jumbotron" style="background-color: lightgray">
-   
-        
+  <div class="jumbotron" style="background-color: lightgray">
+
+
     <h1 class="display-4 text-center">Mortgage Form</h1>
-   
-        
-   
+
+
+
     <div class="row text-center">
 
-            <!-- COLUMN 1 -->
-            <div class="col-sm-4"></div>
-          
-            <!-- COLUMN 2 -->
-            <div class="col-sm-4">
-          
-                <form id="kemcho">
+      <!-- COLUMN 1 -->
+      <div class="col-sm-4"></div>
 
-                    <p class="text-center" id="user" name="user"><%=req.session.userid%></p>
-                    <div class="form-group">
-                      <label for="mid" ><strong id="MID" style="font-size: 20px">Mortgage Id:</strong></label>
-                      <input type="number" name="mid" class="form-control" id="mid" required>
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="lnk"><strong id="LNK" style="font-size: 20px">Link:</strong></label>
-                      <input type="lnk" name="lnk" class="form-control" id="lnk" required>
-                      <p class="text-danger" id="linkTest"></p>
-                    </div>
-                
-                   
-                    <p>By clicking "Agree" I give consent to providing personal information to an external party.</p>
-                    <button type="submit" class="btn btn-primary">Agree</button>
-                  </form>
-          
-            </div>
-          
-            <!-- COLUMN 3 -->
-            <div class="col-sm-4"></div>
-            <!--Login FORM-->
-          
+      <!-- COLUMN 2 -->
+      <div class="col-sm-4">
+
+        <form id="kemcho">
+
+          <p class="text-center" id="user" name="user"><%=req.session.userid%></p>
+          <div class="form-group">
+            <label for="mid"><strong id="MID" style="font-size: 20px">Mortgage Id:</strong></label>
+            <input type="number" name="mid" class="form-control" id="mid" required>
           </div>
-          
-</div>
-</div>
+
+          <div class="form-group">
+            <label for="lnk"><strong id="LNK" style="font-size: 20px">Link:</strong></label>
+            <input type="lnk" name="lnk" class="form-control" id="lnk" required>
+            <p class="text-danger" id="linkTest"></p>
+          </div>
+
+
+          <p>By clicking "Agree" I give consent to providing personal information to an external party.</p>
+          <button type="submit" class="btn btn-primary">Agree</button>
+        </form>
+
+      </div>
+
+      <!-- COLUMN 3 -->
+      <div class="col-sm-4"></div>
+      <!--Login FORM-->
+
     </div>
 
-<div class = "container" style="background-color: blue;display: none" id="resultDiv" >
-<strong><p id="result" class="jumbotron" style="text-align: center; margin-bottom: 10%;font-size: 25px;background-color: lightgray"></p></strong></div>
+  </div>
+</div>
+</div>
+
+<div class="container" style="background-color: blue;display: none" id="resultDiv">
+  <strong>
+    <p id="result" class="jumbotron"
+      style="text-align: center; margin-bottom: 10%;font-size: 25px;background-color: lightgray"></p>
+  </strong></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script type="text/javascript">
 
-(function($){
+  (function ($) {
 
-  function retrieveEmployeeData(e){
-    console.log("[retrieveEmployeeData] Function Called");
-    var userId = $('#user').text();
-    var myData = { id: userId };
+    function retrieveEmployeeData(e) {
+      console.log("[retrieveEmployeeData] Function Called");
+      var userId = $('#user').text();
+      var myData = { id: userId };
 
-    $.ajax({
+      $.ajax({
         url: 'http://localhost:3000/employer/retrieveData',
         dataType: 'jsonp',
         type: 'POST',
         data: myData,
-        success: function(data){
+        success: function (data) {
 
           console.log("[retreiveData] Success");
           submitEmployeeToBrocker(e, data.Employee);
 
         },
-        error: function(error){
-            $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
-            console.log("[retreiveData] Error occured");
-            console.log(error);
+        error: function (error) {
+          $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
+          console.log("[retreiveData] Error occured");
+          console.log(error);
         }
-    });
+      });
 
-    //prevent the error from taking the user from the default page
-    e.preventDefault();
-  }
+      //prevent the error from taking the user from the default page
+      e.preventDefault();
+    }
 
-  function submitEmployeeToBrocker(e, employee){
-    
-    console.log("[submitEmployeeToBrocker] Function Called");
-    
-    var mortgageID = $('#mid').val();
-    var webserviceurl = $('#lnk').val();
+    function submitEmployeeToBrocker(e, employee) {
 
-    console.log(webserviceurl)
-    e.preventDefault();
-    $.ajax({
+      console.log("[submitEmployeeToBrocker] Function Called");
+
+      var mortgageID = $('#mid').val();
+      var webserviceurl = $('#lnk').val();
+      var token = sessionStorage.getItem('Token');
+      console.log(webserviceurl)
+      e.preventDefault();
+      $.ajax({
+        
         //url: 'http://localhost:1338/validateApplication',
         url: webserviceurl + "/validateApplication",
-        type: 'POST', 
+        type: 'POST',
+        headers: { "Authorization":'Bearer '+token, 'Access-Control-Allow-Origin': '*','Access-Control-Allow-Headers': '*'},
         data: {
           "mortgageID": mortgageID,
           "employeeName": (employee.userFirstName + " " + employee.userLastName),
@@ -101,35 +106,36 @@
           "employment_length": employee.employmentLengthYears,
           "employeeID": employee.employeeID,
         },
+        
         dataType: 'json',
-        crossDomain:true,
-        success: function(data){
+        //Authorization: 'Bearer '+token,
+        crossDomain: true,
+        success: function (data) {
 
 
 
-          if(data.status == "ERROR")
-          {
+          if (data.status == "ERROR") {
             $("#result").html("Error : " + data.error_message);
           }
-          else{
+          else {
             $("#result").html("Result : " + data.status);
           }
 
-          $("#resultDiv").css("display","block");
+          $("#resultDiv").css("display", "block");
 
         },
-        error: function(error){
+        error: function (error) {
           $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
           console.log("[submitEmployeeToBrocker] Error occured");
           console.log(error);
         }
-    });
+      });
 
-    e.preventDefault();
-  }
+      e.preventDefault();
+    }
 
-  $('#kemcho').submit( retrieveEmployeeData );
+    $('#kemcho').submit(retrieveEmployeeData);
 
-})(jQuery);
+  })(jQuery);
 
 </script>

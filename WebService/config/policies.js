@@ -17,6 +17,11 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  // '*': true,
+  '*': ['isAuthorized'],
+  'EmployerController': {
+    'authenticate': true, // We dont need authorization here, allowing public access
+    'retrieveData': true // We dont need authorization here, allowing public access
+  },
+
 
 };
