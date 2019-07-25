@@ -74,7 +74,7 @@ module.exports = {
                         Logger.log("INSinc","[Success] Insurance value has been successfully sent to MBR [MortId]: " + mortID)
                         return res.ok();
                     }else{
-                        Logger.log("INSinc","[Error] MBR return indicates an error with the data [MortId]: " + mortID)
+                        Logger.log("INSinc","[Error] MBR return indicates an error with the data [MortId]: " + mortID + " [body]: " + body)
                         return res.send("[Error] MBR return indicates an error with the data [MortId]: " + mortID)
                     }
                 }
