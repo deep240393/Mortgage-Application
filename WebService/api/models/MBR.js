@@ -9,6 +9,10 @@ module.exports = {
 
   attributes: {
 
+    mortgage_ID:{
+      type: "string",
+      required:true
+    },
     name:{
       type: "string",
       required:true

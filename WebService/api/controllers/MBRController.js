@@ -27,7 +27,7 @@ function generateId(length){
 //suporter function for generating unqiue mortgage id
 async function isUniqueMortgageId(value){
     
-    var records = await MBR.find({ employer_name: value });
+    var records = await MBR.find({ mortgage_ID: value });
     
     if(records.length == 0){
         return true;
@@ -72,6 +72,7 @@ module.exports = {
         var mortgage_value = req.param('mortgage_value');
         var MlsID = req.param('MlsID');
         var enctyptedPassword = '';
+        var mortgageID = generateIdUniqueMortgageId(8);
 
         if (mortgage_value !== undefined && mortgage_value != '') {
             mortgage_value = mortgage_value.replace(",", "");   // remove commas from value
@@ -131,6 +132,7 @@ module.exports = {
             // ORM to insert data into table
             // Here, the status will be "pending" for new application
             MBR.create({
+                mortgage_ID: mortgageID,
                 name: name,
                 email: email,
                 phone: phone,
@@ -452,7 +454,7 @@ module.exports = {
             return res.send([error_message]);
         }
 
-        MBR.findOne({ id: mortgageID }).exec(async function (err, data) {
+        MBR.findOne({mortgage_ID: mortgageID }).exec(async function (err, data) {
             if (err) {
                 // database connection error. Log error
                 error_message = "Something went wrong while fetching data.";
@@ -467,12 +469,12 @@ module.exports = {
             }
             else {
                 // id is matched
-                var check_application = await MBR.findOne({ id: mortgageID, name: name, MlsID: MlsID, status: 'pending' });
+                var check_application = await MBR.findOne({mortgage_ID: mortgageID, name: name, MlsID: MlsID, status: 'pending' });
                 if (!check_application) {
-                    var check_status = await MBR.findOne({ id: mortgageID, name: name, MlsID: MlsID });
+                    var check_status = await MBR.findOne({mortgage_ID: mortgageID, name: name, MlsID: MlsID });
                     if (!check_status && data.INSinc_confirmation != 'true') {
                         // wrong data is submitted. Reject the application
-                        var reject_application = await MBR.updateOne({ id: mortgageID }).set({ status: 'rejected' });
+                        var reject_application = await MBR.updateOne({ mortgage_ID: mortgageID }).set({ status: 'rejected' });
                         if (!reject_application) {
                             // database connection error. Log error
                             error_message = "Something went wrong while rejecting application.";
@@ -519,7 +521,7 @@ module.exports = {
                     else {
                         if (check_application.EMP_confirmation == 'true') {
                             // if data from employer is also validated, accept the application.
-                            var updateData = await MBR.updateOne({ id: mortgageID, name: name, MlsID: MlsID })
+                            var updateData = await MBR.updateOne({ mortgage_ID: mortgageID, name: name, MlsID: MlsID })
                                 .set({ insured_value: insured_value, deductible_value: deductible_value, INSinc_confirmation: 'true', status: 'accepted' });
                             if (!updateData) {
                                 // This loop will only be reached if service is down
@@ -536,7 +538,7 @@ module.exports = {
                         }
                         else {
                             // if data from INSinc is not validated yet, just update MBR table.
-                            var updateData = await MBR.updateOne({ id: mortgageID, name: name, MlsID: MlsID })
+                            var updateData = await MBR.updateOne({ mortgage_ID: mortgageID, name: name, MlsID: MlsID })
                                 .set({ insured_value: insured_value, deductible_value: deductible_value, INSinc_confirmation: 'true' });
                             if (!updateData) {
                                 // This loop will only be reached if service is down
