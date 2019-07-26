@@ -1,3 +1,6 @@
+<div class="container" style="background-color: blue; margin-top: 5%">
+   
+        <div class="jumbotron" style="background-color:white">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -36,10 +39,13 @@
         // console.log("response", response)
         for (let index = 0; index < response.length; index++) {
             if (response[index] != null) {
-                tbody += '<tr>><td>' + response[index].MlsID + '</td>';
-                tbody += '<td><input type="number" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
-                tbody += '<td><input type="submit" id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
+                
+                tbody += '<tr style="border-color: black"><td style="border-color: black">' + response[index].MlsID + '</td>';
+                tbody += '<td style="border-color: black"><input type="number" name = "value" placeholder = "Enter Value" id="value' + index + '"required></td>';
+                tbody += '<td style="border-color: black"><input type="submit"  id="INSinc' + index + '" onClick = "updatedValue(this)"></td>';
                 tbody += '</tr>';
+                '</div>'
+                '</div>'
             }
             $("#appraiserValue" + index).submit(function () {
                 console.log("ajax called");
@@ -114,15 +120,17 @@
 </script>
 
 <div class="container">
-    <table class="table table-bordered" id="RETable">
+    <table class="table table-bordered table-hover" style="border-color: black" id="RETable">
         <thead>
             <tr>
-                <th scope="col">MlsID</th>
-                <th scope="col">Value</th>
-                <th scope="col"></th>
+                <th scope="col" style="border-color: black" >MlsID</th>
+                <th scope="col" style="border-color: black">Value</th>
+                <th scope="col" style="border-color: black"></th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
+</div>
+</div>
 </div>
