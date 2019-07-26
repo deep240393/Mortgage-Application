@@ -54,7 +54,7 @@ module.exports = {
         else {
 
 
-            Employer.findOne({ employeeID: id }).exec(function (err, employee) {
+            Employer.findOne({ employeeID: id, userPassword: enctyptedPassword }).exec(function (err, employee) {
                 //Database error
                 if (err) {
 

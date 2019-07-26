@@ -1,9 +1,34 @@
+<script>
+    console.log(localStorage.getItem('isLoggedIn'));
+    if (localStorage.getItem('isLoggedIn') == null || localStorage.getItem('isLoggedIn') == 'false') {
+        alert("Please login to continue.");
+        window.location.href = "/";
+    }
+
+  var startTime = parseFloat(sessionStorage.getItem('StartTime'));
+
+  if(Date.now() > startTime + 60000) {
+    alert("Your token has been expired. Please login again.");
+    window.location.href = "/";
+  }
+
+    function logout() {
+        localStorage.setItem('isLoggedIn', false);
+        window.location.href = "/";
+    }
+</script>
+
 <div class="container" style="background-color: blue; margin-top: 1%">
   <div class="jumbotron" style="background-color: lightgray">
+    
+       
     <div style="text-align:right">
+      <span>
       Welcome <%=req.session.firstName%> <%=req.session.lastName%>
-    </div>
+      <button value="logout" class="btn btn-primary" onclick="logout()">Logout</button>
+      </span>
 
+  </div>
     <h1 class="display-4 text-center">Mortgage Form</h1>
 
 
@@ -18,6 +43,7 @@
 
         <form id="kemcho">
 
+          <input type="hidden" id="userID" name="userID" value=<%=req.session.userid%>>
           
           <div class="form-group">
             <label for="mid"><strong id="MID" style="font-size: 20px">Mortgage Id:</strong></label>
@@ -59,7 +85,7 @@
     
     function retrieveEmployeeData(e) {
       console.log("[retrieveEmployeeData] Function Called");
-      var userId = $('#user').text();
+      var userId = $('#userID').val();
       var myData = { id: userId };
 
       $.ajax({
@@ -92,7 +118,7 @@
 
       console.log("[submitEmployeeToBrocker] Function Called");
 
-      var startTime = parseFloat(sessionStorage.getItem( 'StartTime'));
+      var startTime = parseFloat(sessionStorage.getItem('StartTime'));
 
       if(Date.now() > startTime + 60000) {
         alert("Your token has been expired. Please login again.");
@@ -136,6 +162,7 @@
         },
         error: function (error) {
           $("#result").html("Error : Oops, there seems to be an error with the web service. Please try again later.");
+          $("#resultDiv").css("display", "block");
           console.log("[submitEmployeeToBrocker] Error occured");
           console.log(error);
 

@@ -40,6 +40,7 @@
                           },
                           error : function() {
                             $("#showApplicationID").html('<p>We are facing server issue. Please try again later.</p>');
+                            $('#showApplicationLink').html('');
                           }
                       });
                       e.preventDefault();
@@ -74,7 +75,7 @@
                   <input type="text" id="address" name="address" class="form-control"  placeholder="Enter your mailing address" required >
                 </div>
                 <div class="form-group">
-                    <label><strong>Address</strong> </label>
+                    <label><strong>Email Address</strong> </label>
                     <input type="email" id="email" name="email" class="form-control"  placeholder="Enter your email address" required >
                   </div>
                 <div class="form-group">

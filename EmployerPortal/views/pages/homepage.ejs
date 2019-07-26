@@ -73,8 +73,9 @@
 
                 console.log("[authorizeUser] Authorized TRUE");
              
-                window.location.assign("/form?id="+userId+"&userFirstName="+data.Employee['userFirstName']+"&userLastName="+data.Employee['userLastName']);
+                window.location.assign("/form?id="+userId+"&userFirstName="+data.Employee['userFirstName']+"&userLastName="+data.Employee['userLastName']+"&token="+data.Token);
                 sessionStorage.setItem("Token",data.Token);
+                localStorage.setItem("isLoggedIn", true);
                 sessionStorage.setItem("StartTime", Date.now());
 
               //User is not Authorized
