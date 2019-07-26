@@ -1,6 +1,14 @@
 <div class="container" style="background-color: blue; margin-top: 5%">
    
         <div class="jumbotron" style="background-color:white">
+<script>
+    console.log(localStorage.getItem('isLoggedIn'));
+    if (localStorage.getItem('isLoggedIn') == null || localStorage.getItem('isLoggedIn') == 'false') {
+        alert("Please login to continue.");
+        window.location.href = "/ApprisalForm";
+    }
+</script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -132,5 +140,14 @@
         </tbody>
     </table>
 </div>
-</div>
+
+<script>
+    function logout() {
+        localStorage.setItem('isLoggedIn', false);
+        window.location.href = "/ApprisalForm";
+    }
+</script>
+
+<div>
+    <button value="logout" class="btn btn-primary" style="margin-left: 45%" onclick="logout()">Logout</button>
 </div>

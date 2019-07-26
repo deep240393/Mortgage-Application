@@ -1,3 +1,11 @@
+<script>
+    console.log(localStorage.getItem('isLoggedIn'));
+    if (localStorage.getItem('isLoggedIn') == null || localStorage.getItem('isLoggedIn') == 'false') {
+        alert("Please login to continue.");
+        window.location.href = "/LoginPage";
+    }
+</script>
+
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -5,7 +13,7 @@
 </head>
 
 <script>
-    function show_data(){
+    function show_data() {
 
         // fetch data
         data = JSON.parse(localStorage.getItem("user_data"));
@@ -20,10 +28,10 @@
         document.getElementById('mortgage_ID').innerHTML = data.data.mortgage_ID;
 
         // update application status
-        if (data.data.status == 'accepted'){
+        if (data.data.status == 'accepted') {
             document.getElementById('showApplicationStatusApproved').style.display = 'block';
         }
-        else if (data.data.status == 'pending'){
+        else if (data.data.status == 'pending') {
             document.getElementById('showApplicationStatusPending').style.display = 'block';
         }
         else {
@@ -31,7 +39,7 @@
         }
 
         // update employer application status
-        if (data.data.EMP_confirmation == 'true'){
+        if (data.data.EMP_confirmation == 'true') {
             document.getElementById('showEMPInfoApproved').style.display = 'block';
             document.getElementById('employee_salary').style.display = 'block';
             document.getElementById('employment_duration').style.display = 'block';
@@ -43,7 +51,7 @@
         }
 
         // update RE broker application status
-        if (data.data.INSinc_confirmation == 'true'){
+        if (data.data.INSinc_confirmation == 'true') {
             document.getElementById('showINSincInfoApproved').style.display = 'block';
             document.getElementById('deductible_value').style.display = 'block';
             document.getElementById('insured_value').style.display = 'block';
@@ -57,24 +65,32 @@
 </script>
 
 <!-- call function on load -->
-<body onload="show_data()">   
+
+<body onload="show_data()">
     <div class="row">
         <div class="col-md-6 container jumbotron">
-            <center><h1 class="container">MBR Application Tracking</h1></center><br>
-             <!-- Login form of MBR portal -->
+            <center>
+                <h1 class="container">MBR Application Tracking</h1>
+            </center><br>
+            <!-- Login form of MBR portal -->
             <center>
                 <div class="form-group">
                     <b><label>Application ID</label></b><br>
                     <label id="ApplicationID" name="ApplicationID"></label>
                 </div>
                 <div class="form-group">
-                    <b><label>Application Status</label></b><br>   <!-- show application status -->
-                    <span class="label label-success" id="showApplicationStatusApproved" style="display: none; width: 60px">Approved</span>
-                    <span class="label label-warning" id="showApplicationStatusPending" style="display: none; width: 60px">Pending</span>
-                    <span class="label label-danger" id="showApplicationStatusRejected" style="display: none; width: 60px">Rejected</span>
+                    <b><label>Application Status</label></b><br> <!-- show application status -->
+                    <span class="label label-success" id="showApplicationStatusApproved"
+                        style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showApplicationStatusPending"
+                        style="display: none; width: 60px">Pending</span>
+                    <span class="label label-danger" id="showApplicationStatusRejected"
+                        style="display: none; width: 60px">Rejected</span>
                 </div>
                 <hr>
-                <center><h2 class="container">Applicant Details</h2></center><br>
+                <center>
+                    <h2 class="container">Applicant Details</h2>
+                </center><br>
                 <div class="form-group">
                     <b><label>Name</label></b><br>
                     <label id="Name" name="Name"></label>
@@ -110,32 +126,52 @@
 
                 <!-- https://www.w3schools.com/bootstrap/bootstrap_badges_labels.asp -->
 
-                <center><h2 class="container">Confirmation status</h2></center><br>
-                <center><h3 class="container">Employer portal</h3></center><br>
-                <div class="form-group">   <!-- show employer application status -->
+                <center>
+                    <h2 class="container">Confirmation status</h2>
+                </center><br>
+                <center>
+                    <h3 class="container">Employer portal</h3>
+                </center><br>
+                <div class="form-group">
+                    <!-- show employer application status -->
                     <b><label>Status</label></b><br>
-                    <span class="label label-success" id="showEMPInfoApproved" style="display: none; width: 60px">Approved</span>
-                    <span class="label label-warning" id="showEMPInfoPending" style="display: none; width: 60px">Pending</span>
+                    <span class="label label-success" id="showEMPInfoApproved"
+                        style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showEMPInfoPending"
+                        style="display: none; width: 60px">Pending</span>
                     <label id="employment_duration" name="employment_duration" style="display: none">
-                        Employment Duration:     
+                        Employment Duration:
                     </label>
                     <label id="employee_salary" name="employee_salary" style="display: none">
-                        Employee Salary: 
+                        Employee Salary:
                     </label>
                 </div>
-                <center><h3 class="container">RE Broker portal</h3></center><br>
-                <div class="form-group">   <!-- show RE broker application status -->
+                <center>
+                    <h3 class="container">RE Broker portal</h3>
+                </center><br>
+                <div class="form-group">
+                    <!-- show RE broker application status -->
                     <b><label>Status</label></b><br>
-                    <span class="label label-success" id="showINSincInfoApproved" style="display: none; width: 60px">Approved</span>
-                    <span class="label label-warning" id="showINSincInfoPending" style="display: none; width: 60px">Pending</span>
+                    <span class="label label-success" id="showINSincInfoApproved"
+                        style="display: none; width: 60px">Approved</span>
+                    <span class="label label-warning" id="showINSincInfoPending"
+                        style="display: none; width: 60px">Pending</span>
                     <label id="insured_value" name="insured_value" style="display: none">
-                        Insured Value: 
+                        Insured Value:
                     </label>
                     <label id="deductible_value" name="deductible_value" style="display: none">
-                        Deductible Value: 
+                        Deductible Value:
                     </label>
                 </div>
             </center>
-      </div>
+            <button value="logout" class="btn btn-primary" style="margin-left: 45%" onclick="logout()">Logout</button>
+        </div>
     </div>
 </body>
+
+<script>
+    function logout() {
+        localStorage.setItem('isLoggedIn', false);
+        window.location.href = "/LoginPage";
+    }
+</script>

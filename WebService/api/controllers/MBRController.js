@@ -153,11 +153,11 @@ module.exports = {
                 if (err) {
 
                     Logger.log("MBR", "[RegistrationError] Error in registering new applicant  " + name);
-                    return res.send({ data: err });
+                    return res.send({ error_message: err });
                 }
 
                 var fetch_data = await MBR.findOne({
-                    name: name, email: email, phone: phone, mailing_address: address,
+                    name: name, email: email, phone: phone, mailing_address: address, mortgage_ID: mortgageID, 
                     employer_name: employer, password: enctyptedPassword, employee_ID: employee_ID, MlsID: MlsID,
                     mortgage_value: mortgage_value, status: "pending"
                 }, function (err, row) {

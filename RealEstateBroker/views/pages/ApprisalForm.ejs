@@ -25,6 +25,7 @@
           {
             $("#appraisalLoginForm")[0].reset();
             localStorage.setItem("user_data", JSON.stringify(response));
+            localStorage.setItem("isLoggedIn", true);
             window.location.href = "Appraiser";
           }
           
