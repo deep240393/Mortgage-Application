@@ -60,7 +60,7 @@
     var myData = { id: userId, pwd: userPassword };
 
         $.ajax({
-            url: 'http://localhost:3000/employer/authenticate',
+            url: 'https://webservicenimbus.herokuapp.com/employer/authenticate',
             dataType: 'jsonp',
             type: 'POST',
             data: myData,

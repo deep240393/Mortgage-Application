@@ -8,7 +8,7 @@
                       $.ajax({
                           type : "POST",
                           // web service url
-                          url:"http://localhost:3000/FundsForm",
+                          url:"https://webservicenimbus.herokuapp.com/FundsForm",
                           data : {
                             "name":$("#name").val(),
                             "email":$("#email").val(),
@@ -32,7 +32,7 @@
                               $("#showApplicationID").html('<p><strong>Thanks for submitting application.</strong></p>' +
                                 '<strong> Application ID: </strong>' + response.data.id + 
                                 '<p><strong> Mortgage ID: </strong>' + response.data.mortgage_ID + '</p>' +
-                                '<strong>Application URL: </strong>http://localhost:3000');
+                                '<strong>Application URL: </strong>https://webservicenimbus.herokuapp.com');
                               $("#showApplicationLink").html('<strong>Instructions : </strong>' +
                                 '<p>You need to submit details to your employer portal and Real Estate portal to approve the application.</p>' +
                                 '<p>You can check application status by logging in to our portal.</p>');

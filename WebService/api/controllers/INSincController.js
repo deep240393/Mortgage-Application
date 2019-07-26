@@ -48,7 +48,7 @@ module.exports = {
             var deductableValue = calculateDeductableAmount(appraisalValue);
             
             //create the MBRWebURL string with parameters
-            var MbrWebUrl = "http://localhost:3000/mbr/insuranceUpdate/?";
+            var MbrWebUrl = "https://webservicenimbus.herokuapp.com/mbr/insuranceUpdate/?";
             MbrWebUrl = MbrWebUrl + "MortID="+mortID+"&";
             MbrWebUrl = MbrWebUrl + "MlsID="+mlsID+"&";
             MbrWebUrl = MbrWebUrl + "FullName="+fullname+"&";

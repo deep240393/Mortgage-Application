@@ -20,7 +20,7 @@
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:3000/getREData",
+            url: "https://webservicenimbus.herokuapp.com/getREData",
             beforeSend: function () {
 
             },
@@ -79,7 +79,7 @@
 
         $.ajax({
             type: "POST",
-            url: 'http://localhost:3000/updateREData',
+            url: 'https://webservicenimbus.herokuapp.com/updateREData',
             data: {
                 'value': value,
                 'id': MSID,
@@ -97,7 +97,7 @@
                         $.ajax({
                             type: "POST",
                             // UELI URL
-                            url: 'http://localhost:3000/insuranceQuote',
+                            url: 'https://webservicenimbus.herokuapp.com/insuranceQuote',
                             data: {
                                 'MlsID': element.MlsID,
                                 'MortID': element.MortgageID,
