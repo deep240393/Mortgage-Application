@@ -50,45 +50,55 @@
     </script>
   </head>
   <body>
-    <div classs="row">
-        <div class="col-md-6 container jumbotron">
-            <center><h1 class="container">Funds Form</h1></center>
+      <div class="container" style="background-color: blue; margin-top: 5%">
+   
+          <div class="jumbotron" style="background-color: lightgray">
+            <center><h1 class="container">Funds Form</h1></center><br><br>
+
+            <div class="row text-center">
+
+                <!-- COLUMN 1 -->
+                <div class="col-sm-4"></div>
+          
+                <!-- COLUMN 2 -->
+                <div class="col-sm-4">
+            <!-- Login form of MBR portal -->
              <!-- Register form of MBR portal -->
             <form method="post" id="fundsform" >
                 <div class="form-group">
-                    <label>Name</label>
+                    <label><strong>Name</strong></label>
                     <input type="text" id="name" name="name" class="form-control"  placeholder="Enter your full name" required >
                 </div>  
                 <div class="form-group">
-                  <label>Mailing Address</label>
+                  <label><strong> Mailing Address</strong></label>
                   <input type="text" id="address" name="address" class="form-control"  placeholder="Enter your mailing address" required >
                 </div>
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label><strong>Address</strong> </label>
                     <input type="email" id="email" name="email" class="form-control"  placeholder="Enter your email address" required >
                   </div>
                 <div class="form-group">
-                    <label>Phone</label>
+                    <label><strong>Phone</strong> </label>
                     <input type="text" name="phone" id="phone" class="form-control" placeholder="e.g 888 888 8888" required/>
                 </div>
                 <div class="form-group">
-                    <label>Employer Name</label>
+                    <label><strong>Employer Name</strong> </label>
                     <input type="text" id="employer" name="employer" class="form-control"  placeholder="Enter your employer name" required >
                 </div>
                 <div class="form-group">
-                  <label>Employee ID</label>
+                  <label><strong>Employee ID</strong> </label>
                   <input type="text" id="employee_ID" name="employee_ID" class="form-control"  placeholder="Enter your employee ID" required >
                 </div>
                 <div class="form-group">
-                  <label>MlsID</label>
+                  <label><strong>MlsID</strong> </label>
                   <input type="text" id="MlsID" name="MlsID" class="form-control"  placeholder="Enter MlsID" required >
                 </div>
                 <div class="form-group">
-                  <label>Mortgage Value</label>
+                  <label><strong>Mortgage Value</strong> </label>
                   <input type="number" id="mortgage_value" name="mortgage_value" class="form-control"  placeholder="Enter mortgage value" required >
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
+                    <label><strong>Password</strong> </label>
                     <input type="password" id="password" name="password" class="form-control"  minlength="8" placeholder="Enter your password" required >
                 </div>
                 <center><input type="submit" value="Submit" class="btn btn-success"></center>

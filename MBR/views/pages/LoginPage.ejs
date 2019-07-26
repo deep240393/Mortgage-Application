@@ -41,19 +41,28 @@
 </head>
 
 <body>
-  <div classs="row">
-    <div class="col-md-6 container jumbotron">
+    <div class="container" style="background-color: blue; margin-top: 5%">
+   
+        <div class="jumbotron" style="background-color: lightgray">
       <center>
-        <h1 class="container">Login Form</h1>
-      </center><br>
+        <h1 class="display-4 text-center">Login Form</h1>
+      </center><br><br>
+
+      <div class="row text-center">
+
+          <!-- COLUMN 1 -->
+          <div class="col-sm-4"></div>
+    
+          <!-- COLUMN 2 -->
+          <div class="col-sm-4">
       <!-- Login form of MBR portal -->
       <form method="post" id="loginform">
         <div class="form-group">
-          <label>Mortgage ID</label>
+          <label><strong>Mortgage ID</strong></label>
           <input type="text" id="user_id" name="user_id" class="form-control"
             placeholder="Enter confirmation ID of your application" required><br>
           <div class="form-group">
-            <label>Password</label>
+            <label><strong>Password</strong></label>
             <input type="password" id="password" name="password" class="form-control" minlength="8"
               placeholder="Enter your password" required>
           </div>
