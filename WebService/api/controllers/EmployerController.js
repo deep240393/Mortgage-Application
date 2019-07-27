@@ -72,18 +72,12 @@ module.exports = {
 
                     //If found, user credientials are valid    
                 } else {
-
-
-                    if (password == enctyptedPassword) {
-
-                        Logger.log("Employer", "[Authentication] Employee successfully found in Employer database");
-                        //password is a match
-                        authorized = true,
-                        employee = employee,
-                        token = jwToken.sign(employee)
-                    }
-
-                }
+                    Logger.log("Employer", "[Authentication] Employee successfully found in Employer database");
+                    //password is a match
+                    authorized = true,
+                    employee = employee,
+                    token = jwToken.sign(employee)
+            }
 
                 //return results
                 return res.jsonp(
