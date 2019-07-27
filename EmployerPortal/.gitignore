@@ -88,7 +88,7 @@ config/local.js
 ################################################
 
 node_modules
-
+package-lock.json
 
 ################################################
 #
@@ -130,3 +130,4 @@ lib-cov
 *.out
 *.pid
 
+package-lock.json

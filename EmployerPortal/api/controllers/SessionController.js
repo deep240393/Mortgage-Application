@@ -11,12 +11,13 @@ module.exports = {
 
         //get the ID which was passed from the login screen
         var id = req.param('id');
+        var firstName = req.param('userFirstName');
+        var lastName = req.param('userLastName');
         req.session.userid = id;
-        
-        //[SessionController / debug] user id now stred in req.session.userid
-        console.log("[SessionController] Session userid: " + req.session.userid)
+        req.session.firstName = firstName;
+        req.session.lastName = lastName;
 
-        return res.view('pages/form', {userId: id});
+        return res.view('pages/form', {userId: id, firstName: firstName, lastName: lastName});
     }
 
 };

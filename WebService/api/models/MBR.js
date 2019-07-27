@@ -9,11 +9,19 @@ module.exports = {
 
   attributes: {
 
+    mortgage_ID:{
+      type: "string",
+      required:true
+    },
     name:{
       type: "string",
       required:true
     },
     email:{
+      type:"string",
+      required:true
+    },
+    password:{
       type:"string",
       required:true
     },
@@ -25,13 +33,18 @@ module.exports = {
       type:"string",
       required:true
     },
+    employee_ID:{
+      type:"string",
+    },
     employer_name:{
       type:"string",
       required:true
     },
-    password:{
+    MlsID:{
       type:"string",
-      required:true
+    },
+    mortgage_value:{
+      type:"string",
     },
     employment_duration:{
       type:"string",
@@ -39,9 +52,21 @@ module.exports = {
     employee_salary:{
       type:"string",
     },
+    insured_value:{
+      type:"string",
+    },
+    deductible_value:{
+      type:"string",
+    },
+    EMP_confirmation:{
+      type:"string",
+    },
+    INSinc_confirmation:{
+      type:"string",
+    },
     status:{
       type:"string",
-    }
+    },
   },
   datastore: 'MbrDb'
 };

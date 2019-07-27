@@ -1,0 +1,86 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>         
+  // ajax function for Real Estate approval form
+  $(document).ready(function() {
+          $("#REApprovalForm").submit(function(e) {
+              e.preventDefault();
+              $.ajax({
+                  type : "POST",
+                  // Real estate web service url
+                  url:"https://webservicenimbus.herokuapp.com/REApprovalForm",
+                  data : {
+                    "MlsID":$("#MlsID").val(),
+                    "Name":$("#Name").val(),
+                    "MortgageID":$("#MortgageID").val(),
+                  },
+                  beforeSend : function() {
+                        
+                  },
+                  success : function(response) {
+                    console.log(response);
+                    if (response.error_message) {
+                      $("#resMsg").html( 
+                        '<p class="alert alert-danger">'+ response.error_message +'</p>');
+                    }
+                    else {
+                      $("#REApprovalForm")[0].reset();
+                      $("#resMsg").html( 
+                        '<p class="alert alert-success">Your property details are successfully submitted for approval. Please check your MBR account for further updates.</p>');
+                    }
+                      
+                  },
+                  error: function() {
+                    alert('We are facing server issue. Please try again later.');
+                    window.location.href = "/";
+                  }
+              });
+              e.preventDefault();
+          });
+
+          });
+</script>
+<div class="container" style="background-color: blue; margin-top: 1%">
+    <div class = "jumbotron" style="background-color: lightgray">
+<h1 class="display-4 text-center">Approval Form</h1>
+<div class="row text-center">
+
+        <!-- COLUMN 1 -->
+        <div class="col-sm-4"></div>
+      
+        <!-- COLUMN 2 -->
+        <div class="col-sm-4">
+      
+            <form id="REApprovalForm">
+
+                <p class="text-center" id="user" name="user"></p>
+                <div class="form-group">
+                  <label><strong style="font-size: 20px">MlsID:</strong></label>
+                  <input type="text" name="MlsID" class="form-control" placeholder="Enter your MlsID" id="MlsID" required>
+                </div>
+                <div class="form-group">
+                  <label><strong  style="font-size: 20px">Name:</strong></label>
+                  <input type="text" name="Name" class="form-control" placeholder="Full name provided at the MBR portal" id="Name" required>
+                  <p class="text-danger" id="linkTest"></p>
+                </div>
+                <div class="form-group">
+                    <label><strong id="MID" style="font-size: 20px">MortgageID:</strong></label>
+                    <input type="text" name="MortgageID" class="form-control" placeholder="Enter your MortgageID" id="MortgageID" required>
+                  </div>
+                <button type="submit" class="btn btn-primary">Agree</button>
+              </form>
+              <br>
+              <div id="resMsg">
+
+              </div>
+      
+        </div>
+      
+        <!-- COLUMN 3 -->
+        <div class="col-sm-4"></div>
+        <!--Login FORM-->
+      
+      </div>
+      
+</div>
+</div>
+</div>

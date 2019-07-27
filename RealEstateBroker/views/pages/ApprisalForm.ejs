@@ -1,0 +1,89 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  // ajax function for Real Estate apprisal login form
+  $(document).ready(function () {
+    $("#appraisalLoginForm").submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        // Real estate web service url
+        url: "https://webservicenimbus.herokuapp.com/appraisalForm/checkAppraisalCredentials",
+        data: {
+          "UserID": $("#UserID").val(),
+          "Password": $("#Password").val(),
+        },
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+          console.log(response);
+          if (response.error_message != '')
+          {
+            $("#errorMsg").html('<p class="alert alert-danger">Incorrect credentials. Please try again</p>');
+          }
+          else
+          {
+            $("#appraisalLoginForm")[0].reset();
+            localStorage.setItem("user_data", JSON.stringify(response));
+            localStorage.setItem("isLoggedIn", true);
+            window.location.href = "Appraiser";
+          }
+          
+        },
+        error: function(response){
+          $("#errorMsg").html();
+        }
+      });
+      e.preventDefault();
+    });
+
+  });
+</script>
+<div class="container" style="background-color: blue; margin-top: 5%">
+  <div class="jumbotron" style="background-color: lightgray">
+    <br><br>
+
+    <h1 class="display-4 text-center">Welcome to the Real Estate Portal</h1>
+
+    <br><br>
+
+
+    <div class="row text-center">
+
+      <!-- COLUMN 1 -->
+      <div class="col-sm-4"></div>
+
+      <!-- COLUMN 2 -->
+      <div class="col-sm-4">
+
+        <form id="appraisalLoginForm">
+
+          <div class="form-group">
+            <label><strong>Appraiser ID:</strong></label>
+            <input type="text" name="UserID" class="form-control" id="UserID" placeholder="Enter your Appraiser ID"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label><strong>Password:</strong></label>
+            <input type="password" name="Password" class="form-control" id="Password" required
+              placeholder="Enter your password" minlength="6">
+          </div>
+
+          <br>
+          <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+        <br>
+        <div id="errorMsg">
+
+        </div>
+
+      </div>
+
+      <!-- COLUMN 3 -->
+      <div class="col-sm-4"></div>
+      <!--Login FORM-->
+
+    </div>
+  </div>
+</div
