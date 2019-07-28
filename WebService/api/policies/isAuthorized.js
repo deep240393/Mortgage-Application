@@ -1,3 +1,4 @@
+var Logger = require('../controllers/LoggerController');
 module.exports = function(req, res, next) {
     var token;
    
@@ -26,9 +27,10 @@ module.exports = function(req, res, next) {
 	}
 	jwToken.verify(token, function(err, decoded) {
 		if(err) {
-            
+			Logger.log("isAuthorized", "[jWToken call][verify][Error] Error occured: "+err);
 			return res.json(401, {err: 'Invalid token'});
 		}
+		Logger.log("isAuthorized", "[jWToken call][verify][Success] Token start time: "+decoded.iat+" Expire time: "+decoded.exp);
 		req.employee = decoded;
 		next();
 	});

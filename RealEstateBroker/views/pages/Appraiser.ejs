@@ -16,6 +16,7 @@
     });
 
     function getData() {
+        console.log("Request sent to RE web service for fetching properties for valuation ");
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -25,6 +26,7 @@
 
             },
             success: function (response) {
+                console.log("Response received from RE web service for fetching properties for valuation ");
                 if (response['errorPresent']) {
                     alert('Something went wrong while fetching data.');
                     window.location.href = "/";    
@@ -76,7 +78,7 @@
 
         var MSID = $(row).parent().siblings()[0].innerHTML;
         var value = $($(row).parent().siblings()[1]).find('input').val();
-
+        console.log("Request sent to RE web service for updating value submitted by the appraiser");
         $.ajax({
             type: "POST",
             url: 'https://webservicenimbus.herokuapp.com/updateREData',
@@ -94,6 +96,7 @@
                 }
                 else {
                     response.forEach(element => {
+                        console.log("Request sent to web service of insuranc company");
                         $.ajax({
                             type: "POST",
                             // UELI URL

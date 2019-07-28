@@ -70,6 +70,11 @@ module.exports = {
         var enctyptedPassword = '';
         var mortgageID = generateIdUniqueMortgageId(8);
         
+        console.log("[MBR] New application requested.");
+
+        Logger.log("MBR", "[newApplication] Details: name:"+name+" email:"+email+" address:"+address+
+            " phone:"+phone+" employer:"+employer+" employee_ID:"+employee_ID+" mortgage value:"+mortgage_value+
+            " MlsID:"+MlsID);
 
         await mortgageID.then(function(result) {
             mortgageID = result
@@ -110,26 +115,26 @@ module.exports = {
             || employer === undefined || password === undefined || employee_ID === undefined ||
             mortgage_value === undefined || MlsID === undefined) {
 
-            Logger.log("MBR", "[ValidationError] Enter all the details!!");
+            Logger.log("MBR", "[ValidationError][newApplication] Enter all the details!!");
             return res.send({ error_message: "Please enter all the details!" });
         }
         else if (email == '' || address == '' || name == '' || phone == '' ||
             employer == '' || password == '' || employee_ID == '' || mortgage_value == '' || MlsID == '') {
 
-            Logger.log("MBR", "[ValidationError] Employee details can not be null!!");
+            Logger.log("MBR", "[ValidationError][newApplication] Employee details can not be null!!");
             return res.send({ error_message: "Employee details can not be null!!" });
 
         }
         else if (!emailRegexp.test(email.toLowerCase())) {
-            Logger.log("MBR", "[ValidationError] Email not valid - New application!!");
+            Logger.log("MBR", "[ValidationError][newApplication] Email not valid - New application!! Email: "+email);
             return res.send({ error_message: "Email not valid" });
         }
         else if (!nameRegexp.test(name.toLowerCase())) {
-            Logger.log("MBR", "[ValidationError] Name not valid - New application!!");
+            Logger.log("MBR", "[ValidationError][newApplication] Name not valid - New application!! Name: "+name);
             return res.send({ error_message: "Name not valid" });
         }
         else if (isNaN(mortgage_value) || parseFloat(mortgage_value) < 0) {
-            Logger.log("MBR", "[ValidationError] Mortgage Value not valid - New application!!");
+            Logger.log("MBR", "[ValidationError][newApplication] Mortgage Value not valid - New application!! Mortgage value: "+mortgage_value);
             return res.send({ error_message: "Mortgage Value not valid" });
         }
         else {
@@ -152,7 +157,7 @@ module.exports = {
             }, async function (err, MBRdata) {
                 if (err) {
 
-                    Logger.log("MBR", "[RegistrationError] Error in registering new applicant  " + name);
+                    Logger.log("MBR", "[RegistrationError][newApplication] Error in registering new applicant: " + name);
                     return res.send({ error_message: err });
                 }
 
@@ -162,7 +167,7 @@ module.exports = {
                     mortgage_value: mortgage_value, status: "pending"
                 }, function (err, row) {
 
-                    Logger.log("MBR", "[Success] New Application for " + name + " successfully created in MBR!");
+                    Logger.log("MBR", "[Success][newApplication] New Application for " + name + " successfully created in MBR!");
                     delete row['password'];   // remove password from row because it should not be returned to frontend
                     return res.send({ data: row });
                 });
@@ -177,6 +182,10 @@ module.exports = {
         var password = req.param("password");
         var error_message = '';
         var enctyptedPassword = '';
+
+        console.log("[MBR] check_credentials called.");
+
+        Logger.log("MBR", "[check_credentials] Request to check credentials for mortgage ID: "+user_id);
 
         // encrypt the password which will be sent in request
         if (password !== undefined && password != '') {
@@ -200,16 +209,16 @@ module.exports = {
         MBR.findOne({ mortgage_ID: user_id, password: enctyptedPassword }).exec(function (err, data) {
             if (err) {
                 error_message = "Something went wrong while fetching data.";
-                Logger.log("MBR", "[Service Down]" + error_message);
+                Logger.log("MBR", "[Service Down][check_credentials]" + error_message + " Error: " + err);
             }
             else if (!data) {
 
                 error_message = "The credentials are not matched. Try again with correct credentials.";
-                Logger.log("MBR", "[Wrong Credentials] for user id [ " + user_id + " ] :  " + error_message);
+                Logger.log("MBR", "[Wrong Credentials][check_credentials] for mortgage id [ " + user_id + " ] :  " + error_message);
             }
             if (error_message == '') {
 
-                Logger.log("MBR", "[Success] Login Successful for user id : [ " + user_id + " ]");
+                Logger.log("MBR", "[Success][check_credentials] Login Successful for mortgage id : [ " + user_id + " ]");
                 return res.send({
                     data: {
                         id: data.id, mortgage_ID: data.mortgage_ID, name: data.name, email: data.email, phone: data.phone,
@@ -223,6 +232,7 @@ module.exports = {
                 });  // Send data to show status
             }
             else {
+                Logger.log("MBR", "[Error][check_credentials] Login error mortgage id : [ " + user_id + " ], error message: " + error_message);
                 return res.send({
                     error_message: error_message
                 });  // Send data to show status
@@ -243,6 +253,11 @@ module.exports = {
         var error_message = '';
         const nameRegexp = /^[A-Za-z\s]+$/;
 
+        console.log("[MBR] validationApplication called from employer.");
+        Logger.log("MBR", "[validateApplication][Employer] Requested to validate application. "+
+            "Employee name:"+employeeName+" Employer name:"+employer_name+" MortgageID:"+mortgageID+
+            " Employee salary:"+employee_salary+" Employment duration:"+employment_duration+" Employee ID:"+employee_ID);
+
         if (employee_salary !== undefined && employee_salary != '') {
             employee_salary = employee_salary.replace(",", "");
         }
@@ -251,7 +266,7 @@ module.exports = {
         if (employer_name === undefined || mortgageID === undefined || employeeName === undefined
             || employee_salary === undefined || employment_duration === undefined || employee_ID === undefined){
             error_message = "Please provide all parameters.";
-            Logger.log("MBR", "[ValidationError] All parameters not passed from Employer");
+            Logger.log("MBR", "[ValidationError][Employer] All parameters not passed from Employer");
             return res.send({
                 status: "ERROR",
                 error_message: error_message
@@ -262,7 +277,7 @@ module.exports = {
         else if (employer_name == '' || mortgageID == '' || employeeName == ''
             || employee_salary == '' || employment_duration == '' || employee_ID == ''){
             error_message = "Any parameter cannot be null.";
-            Logger.log("MBR", "[ValidationError] Empty value passed from Employer");
+            Logger.log("MBR", "[ValidationError][Employer] Empty value passed from Employer");
             return res.send({
                 status: "ERROR",
                 error_message: error_message
@@ -271,7 +286,7 @@ module.exports = {
 
         else if (!nameRegexp.test(employeeName)) {
             error_message = "Employee name not valid.";
-            Logger.log("MBR", "[ValidationError] Employee name not valid - value passed from Employer. Name: ", employeeName);
+            Logger.log("MBR", "[ValidationError][Employer] Employee name not valid - value passed from Employer. Name: ", employeeName);
             return res.send({
                 status: "ERROR",
                 error_message: error_message
@@ -279,7 +294,7 @@ module.exports = {
         }
         else if (isNaN(employee_salary) || parseFloat(employee_salary) < 0) {
             error_message = "Employee salary not valid.";
-            Logger.log("MBR", "[ValidationError] Employee salary not valid - value passed from Employer. Salary: ", employee_salary);
+            Logger.log("MBR", "[ValidationError][Employer] Employee salary not valid - value passed from Employer. Salary: ", employee_salary);
             return res.send({
                 status: "ERROR",
                 error_message: error_message
@@ -290,7 +305,7 @@ module.exports = {
             if (err) {
                 // database connection error. Log error
                 error_message = "Something went wrong while fetching data.";
-                Logger.log("MBR", "[Service Down] while validating application from employer side! " + error_message);
+                Logger.log("MBR", "[Service Down][Employer] while validating application from employer side! " + error_message);
                 return res.send({
                     status: "ERROR",
                     error_message: error_message
@@ -299,7 +314,7 @@ module.exports = {
             else if (!data) {
                 // wrong id is submitted
                 error_message = "No such data available with broker. Check with our IT department if your information submitted to broker matches our database.";
-                Logger.log("MBR", "[Data Not Matched] while validating application from employer side! " + error_message);
+                Logger.log("MBR", "[Data Not Matched][Employer] while validating application from employer side! " + error_message);
                 return res.send({
                     status: "ERROR",
                     error_message: error_message
@@ -316,7 +331,7 @@ module.exports = {
                         if (!reject_application) {
                             // database connection error. Log error
                             error_message = "Something went wrong while rejecting application.";
-                            Logger.log("MBR", "[Service Down] while rejecting application from employer side! " + error_message);
+                            Logger.log("MBR", "[Service Down][Employer] while rejecting application from employer side! " + error_message);
                             return res.send({
                                 status: "ERROR",
                                 error_message: error_message
@@ -325,7 +340,7 @@ module.exports = {
                         else {
                             // return response
                             error_message = "Application is rejected. Wrong data submitted.";
-                            Logger.log("MBR", "[Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Rejected][Employer] for mortgage Id [ " + mortgageID + " ]");
                             return res.send({
                                 status: "REJECTED",
                                 error_message: error_message
@@ -335,7 +350,7 @@ module.exports = {
                     else {
                         if (data.EMP_confirmation == 'true') {
                             error_message = "Application is already submitted.";
-                            Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from employer side");
+                            Logger.log("MBR", "[Application Already Submitted][Employer] for mortgage Id [ " + mortgageID + " ]: from employer side");
                             return res.send({
                                 status: "ERROR",
                                 error_message: error_message
@@ -345,7 +360,7 @@ module.exports = {
                         if (data.status == 'accepted') {
                             // Though it is not error message, it is written just to avoid ambiguity for employer
                             error_message = "Application is already accepted.";
-                            Logger.log("MBR", "[Application Already Accepted] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Application Already Accepted][Employer] for mortgage Id [ " + mortgageID + " ]");
                             return res.send({
                                 status: "ACCEPTED",
                                 error_message: error_message
@@ -354,7 +369,7 @@ module.exports = {
                         else {
                             // Though it is not error message, it is written just to avoid ambiguity for employer
                             error_message = "Application is already rejected.";
-                            Logger.log("MBR", "[Application Already Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Application Already Rejected][Employer] for mortgage Id [ " + mortgageID + " ]");
                             return res.send({
                                 status: "REJECTED",
                                 error_message: error_message
@@ -368,7 +383,7 @@ module.exports = {
                         // Data from employer is already submitted.
                         // Though it is not error message, it is written just to avoid ambiguity for employer
                         error_message = "Application is already submitted.";
-                        Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from employer side");
+                        Logger.log("MBR", "[Application Already Submitted][Employer] for mortgage Id [ " + mortgageID + " ]: from employer side");
                         return res.send({
                             status: "ERROR",
                             error_message: error_message
@@ -382,7 +397,7 @@ module.exports = {
                             if (!updateData) {
                                 // This loop will only be reached if service is down
                                 error_message = "Something went wrong while updating data. Please try again later";
-                                Logger.log("MBR", "[Service Down] while validating application from employer side! " + error_message);
+                                Logger.log("MBR", "[Service Down][Employer] while validating application from employer side! " + error_message);
                                 return res.send({
                                     status: "ERROR",
                                     error_message: error_message
@@ -391,7 +406,7 @@ module.exports = {
                             else {
                                 // Though it is not error message, it is written just to avoid ambiguity for employer
                                 error_message = "Employer data matched. Application is accepted";
-                                Logger.log("MBR", "[Success both portal] for mortgage Id [ " + mortgageID + " ]");
+                                Logger.log("MBR", "[Success both portal][Employer] for mortgage Id [ " + mortgageID + " ]");
                                 return res.send({
                                     status: "ACCEPTED",
                                     error_message: error_message
@@ -405,7 +420,7 @@ module.exports = {
                             if (!updateData) {
                                 // This loop will only be reached if service is down
                                 error_message = "Something went wrong while updating data. Please try again later";
-                                Logger.log("MBR", "[Service Down] while validating application from employer side! " + error_message);
+                                Logger.log("MBR", "[Service Down][Employer] while validating application from employer side! " + error_message);
                                 return res.send({
                                     status: "ERROR",
                                     error_message: error_message
@@ -414,7 +429,7 @@ module.exports = {
                             else {
                                 // Though it is not error message, it is written just to avoid ambiguity for employer
                                 error_message = "Employer data matched. Employer data has been accepted. Insurance company has not submitted your data yet.";
-                                Logger.log("MBR", "[Success employer portal] for mortgage Id [ " + mortgageID + " ]");
+                                Logger.log("MBR", "[Success employer portal][Employer] for mortgage Id [ " + mortgageID + " ]");
                                 return res.send({
                                     status: "ACCEPTED",
                                     error_message: error_message
@@ -435,18 +450,22 @@ module.exports = {
         var deductible_value = req.param('DeductableValue');
         var insured_value = req.param('InsuredValue');
         
+        console.log("[MBR] insuranceUpdate called from insurance company.");
+        Logger.log("MBR", "[insuranceUpdate][Insurance] insuranceUpdate called. MortgageID:"+mortgageID+
+            " MlsID:"+MlsID+" Name:"+name+" Deductible value:"+deductible_value+" Insured value:"+insured_value);
+
         // Check if all parameters are passed
         if (mortgageID === undefined || MlsID === undefined || name === undefined || deductible_value === undefined
             || insured_value === undefined){
             error_message = "Please provide all parameters.";
-            Logger.log("MBR", "[ValidationError] All parameters not passed from INSinc");
+            Logger.log("MBR", "[ValidationError][Insurance] All parameters not passed from INSinc");
             return res.send([error_message]);
         }
 
         // Check if any parameter is not empty
         else if (mortgageID == '' || MlsID == '' || name == '' || deductible_value == '' || insured_value == ''){
             error_message = "Any parameter cannot be null.";
-            Logger.log("MBR", "[ValidationError] Empty value passed from INSinc");
+            Logger.log("MBR", "[ValidationError][Insurance] Empty value passed from INSinc");
             return res.send([error_message]);
         }
 
@@ -454,7 +473,7 @@ module.exports = {
         insured_value = insured_value.replace(",", "");
         if (isNaN(deductible_value) || isNaN(insured_value) || parseFloat(deductible_value) < 0 || parseFloat(insured_value) < 0) {
             error_message = "Deductible or insured value is wrong.";
-            Logger.log("MBR", "[ValidationError] Wrong deductible or insured value passed from INSinc. Deductible value: ", deductible_value, " Insured value: ", insured_value);
+            Logger.log("MBR", "[ValidationError][Insurance] Wrong deductible or insured value passed from INSinc. Deductible value: ", deductible_value, " Insured value: ", insured_value);
             return res.send([error_message]);
         }
 
@@ -462,13 +481,13 @@ module.exports = {
             if (err) {
                 // database connection error. Log error
                 error_message = "Something went wrong while fetching data.";
-                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                Logger.log("MBR", "[Service Down][Insurance] while validating application from RE side! " + error_message);
                 return res.send([error_message]);
             }
             else if (!data) {
                 // wrong id is submitted
                 error_message = "No such data available with broker. Check with our IT department if your information submitted to broker matches our database.";
-                Logger.log("MBR", "[Data Not Matched] while validating application from RE side! " + error_message);
+                Logger.log("MBR", "[Data Not Matched][Insurance] while validating application from RE side! " + error_message);
                 return res.send([error_message]);
             }
             else {
@@ -482,33 +501,33 @@ module.exports = {
                         if (!reject_application) {
                             // database connection error. Log error
                             error_message = "Something went wrong while rejecting application.";
-                            Logger.log("MBR", "[Service Down] while rejecting application from RE side! " + error_message);
+                            Logger.log("MBR", "[Service Down][Insurance] while rejecting application from RE side! " + error_message);
                             return res.send([error_message]);
                         }
                         else {
                             // return response
                             error_message = "Application is rejected. Wrong data submitted.";
-                            Logger.log("MBR", "[Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Rejected][Insurance] for mortgage Id [ " + mortgageID + " ]");
                             return res.send([error_message]);
                         }
                     }
                     else {
                         if (data.INSinc_confirmation == 'true') {
                             error_message = "Application is already submitted.";
-                            Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from RE side");
+                            Logger.log("MBR", "[Application Already Submitted][Insurance] for mortgage Id [ " + mortgageID + " ]: from RE side");
                             return res.ok();
                         }
                         // This loop will be only reached if application is already accepted or rejected
                         if (data.status == 'accepted') {
                             // Though it is not error message, it is written just to avoid ambiguity for employer
                             error_message = "Application is already accepted.";
-                            Logger.log("MBR", "[Application Already Accepted] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Application Already Accepted][Insurance] for mortgage Id [ " + mortgageID + " ]");
                             return res.ok();
                         }
                         else {
                             // Though it is not error message, it is written just to avoid ambiguity for employer
                             error_message = "Application is already rejected.";
-                            Logger.log("MBR", "[Application Already Rejected] for mortgage Id [ " + mortgageID + " ]");
+                            Logger.log("MBR", "[Application Already Rejected][Insurance] for mortgage Id [ " + mortgageID + " ]");
                             return res.send([error_message]);
                         }
                     }
@@ -519,7 +538,7 @@ module.exports = {
                         // Data from employer is already submitted.
                         // Though it is not error message, it is written just to avoid ambiguity for employer
                         error_message = "Application is already submitted.";
-                        Logger.log("MBR", "[Application Already Submitted] for mortgage Id [ " + mortgageID + " ]: from RE side");
+                        Logger.log("MBR", "[Application Already Submitted][Insurance] for mortgage Id [ " + mortgageID + " ]: from RE side");
                         return res.ok();
                     }
                     else {
@@ -530,13 +549,13 @@ module.exports = {
                             if (!updateData) {
                                 // This loop will only be reached if service is down
                                 error_message = "Something went wrong while updating data. Please try again later";
-                                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                                Logger.log("MBR", "[Service Down][Insurance] while validating application from RE side! " + error_message);
                                 return res.send([error_message]);
                             }
                             else {
                                 // Though it is not error message, it is written just to avoid ambiguity for employer
                                 error_message = "RE data matched. Application is accepted";
-                                Logger.log("MBR", "[Success both portal] for mortgage Id [ " + mortgageID + " ]");
+                                Logger.log("MBR", "[Success both portal][Insurance] for mortgage Id [ " + mortgageID + " ]");
                                 return res.ok();
                             }
                         }
@@ -547,13 +566,13 @@ module.exports = {
                             if (!updateData) {
                                 // This loop will only be reached if service is down
                                 error_message = "Something went wrong while updating data. Please try again later";
-                                Logger.log("MBR", "[Service Down] while validating application from RE side! " + error_message);
+                                Logger.log("MBR", "[Service Down][Insurance] while validating application from RE side! " + error_message);
                                 return res.send([error_message]);
                             }
                             else {
                                 // Though it is not error message, it is written just to avoid ambiguity for employer
                                 error_message = "Employer data matched. RE data has been accepted. Employer company has not submitted your data yet.";
-                                Logger.log("MBR", "[Success RE portal] for mortgage Id [ " + mortgageID + " ]");
+                                Logger.log("MBR", "[Success RE portal][Insurance] for mortgage Id [ " + mortgageID + " ]");
                                 return res.ok();
                             }
                         }
