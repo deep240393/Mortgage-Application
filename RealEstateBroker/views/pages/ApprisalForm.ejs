@@ -3,6 +3,7 @@
   // ajax function for Real Estate apprisal login form
   $(document).ready(function () {
     $("#appraisalLoginForm").submit(function (e) {
+      console.log("Appraisal registration request sent to RE webservice");
       e.preventDefault();
       $.ajax({
         type: "POST",
@@ -16,6 +17,7 @@
 
         },
         success: function (response) {
+          console.log("Appraisal registration response from RE webservice");
           console.log(response);
           if (response.error_message != '')
           {
