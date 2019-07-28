@@ -43,6 +43,10 @@ module.exports = {
             var mlsID = req.param('MlsID');
             var fullname = req.param('FullName');
             
+            console.log("[Insurance] Insurance quote requested.");
+            Logger.log("INSinc", "[INSinc][insuranceQuote] New insurance quote. MortgageID:"+mortID+
+                " appraisal value:"+appraisalValue+" MlsID:"+mlsID+" Full name:"+fullname);
+
            //calculat the insured value and deductable value
             var insuredValue = calculateInsuredAmount(appraisalValue);
             var deductableValue = calculateDeductableAmount(appraisalValue);
@@ -59,6 +63,7 @@ module.exports = {
             //https://stackoverflow.com/questions/30523872/make-a-http-request-in-your-controller-sails-js
             
             var request = require('request');
+            Logger.log("INSinc", "[INSinc][MBRRequest] Prepared request URL: "+MbrWebUrl);
 
             request.get({ 
                 url: MbrWebUrl
