@@ -79,6 +79,7 @@ module.exports = {
                         authorized = true,
                         employee = employee,
                         token = jwToken.sign(employee)
+                        Logger.log("Employer", "[Employer] Token generated for Employee: "+id+" Token:"+token);
                 }
 
                 //return results
