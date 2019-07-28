@@ -11,7 +11,7 @@ module.exports = {
 
     authenticate: function (req, res) {
 
-        console.log("[Authentication] Endpoint Reached");
+        console.log("[Employer][Authentication] authentication requested");
 
         var authorized = false;
         var errorMessage = "";
@@ -19,6 +19,8 @@ module.exports = {
         var password = req.param('pwd');
         var enctyptedPassword = '';
         var token = ''
+
+        Logger.log("Employer", "[Employer][authenticate] Authentication requested for employee ID:"+id);
 
         // encrypt the password which will be sent in request
         if (password !== undefined && password != '') {
@@ -60,19 +62,19 @@ module.exports = {
 
                     authorized = false;
                     errorMessage = "We are having troubles connecting to the database, please try again later";
-                    Logger.log("Employer", "[Authentication] Troubles connecting to Employer database");
+                    Logger.log("Employer", "[Authentication] Troubles connecting to Employer database. Error: "+err);
 
                     //If undefined, employee does not exist
                 } else if (!employee) {
 
                     authorized = false;
                     errorMessage = "Incorrect credentials, please try again";
-                    Logger.log("Employer", "[Authentication] Employee not found in Employer database");
+                    Logger.log("Employer", "[Authentication] Employee not found in Employer database for employee ID: "+id);
 
 
                     //If found, user credientials are valid    
                 } else {
-                        Logger.log("Employer", "[Authentication] Employee successfully found in Employer database");
+                        Logger.log("Employer", "[Authentication] Employee successfully found in Employer database. Employee ID: "+id);
                         //password is a match
                         authorized = true,
                         employee = employee,
@@ -94,27 +96,28 @@ module.exports = {
 
     retrieveData: function (req, res) {
 
-        console.log("[retrieveData] Endpoint Reached");
+        console.log("[Employer][retrieveData] Request to retrieve data");
 
         var id = req.param('id');
         var errorMessage = "";
+        Logger.log("Employer", "[retrieveData] Request to retrieve data for employee ID: "+id);
 
         Employer.findOne({ employeeID: id }).exec(function (err, employee) {
 
             //Database error
             if (err) {
                 errorMessage = "We are having troubles connecting to the database, please try again later";
-                Logger.log("Employer", "[retrieveData] Troubles connecting to Employer database");
+                Logger.log("Employer", "[retrieveData] Troubles connecting to Employer database. Error: "+err);
             }
 
 
             if (employee) {
                 errorMessage = "Success"
-                Logger.log("Employer", "[retrieveData] Employee data successfully retrieved found in Employer database");
+                Logger.log("Employer", "[retrieveData] Employee data successfully retrieved found in Employer database. Employee ID: "+id);
 
             } else {
                 errorMessage = "Employee not found";
-                Logger.log("Employer", "[retrieveData] Employee data was not retrieved from Employer database");
+                Logger.log("Employer", "[retrieveData] Employee data was not retrieved from Employer database. Employee ID: "+id);
             }
 
             //return results

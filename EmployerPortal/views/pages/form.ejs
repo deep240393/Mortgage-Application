@@ -8,11 +8,13 @@
   var startTime = parseFloat(sessionStorage.getItem('StartTime'));
 
   if(Date.now() > startTime + 60000) {
+    console.log("Session expired");
     alert("Your token has been expired. Please login again.");
     window.location.href = "/";
   }
 
     function logout() {
+        console.log("Logout pressed");
         localStorage.setItem('isLoggedIn', false);
         window.location.href = "/";
     }
@@ -121,6 +123,7 @@
       var startTime = parseFloat(sessionStorage.getItem('StartTime'));
 
       if(Date.now() > startTime + 60000) {
+        console.log("Session expired");
         alert("Your token has been expired. Please login again.");
         window.location.href = "/";
       }
@@ -149,7 +152,7 @@
         //Authorization: 'Bearer '+token,
         crossDomain: true,
         success: function (data) {
-
+          console.log("[submitEmployeeToBrocker] Response received successfully.");
           if (data.status == "ERROR") {
             $("#result").html("Error : " + data.error_message);
           }
