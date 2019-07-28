@@ -16,6 +16,8 @@ module.exports = {
         var Name = req.param('Name');
         var MortgageID= req.param('MortgageID');
         const nameRegexp = /^[A-Za-z\s]+$/;
+        // log indicating request in received from the customer
+        Logger.log("RealEstate Approval","[Success] New Application request for "+ Name + " successfully sent to RealEstate webservice!");
         
         if (MlsID === undefined || Name === undefined || MortgageID=== undefined) {
 
@@ -63,7 +65,7 @@ module.exports = {
         var error_message = "";
         var auth = false;
         var enctyptedPassword = '';
-
+        Logger.log("Appraiser approval form: [Success] request for "+ UserID + " successfully sent to RealEstate webservice!");
         // encrypt the password which will be sent in request
         if (password !== undefined && password != '') {
             // http://codeniro.com/caesars-cipher-algorithm-javascript/
@@ -89,9 +91,11 @@ module.exports = {
             console.log(data);
             if(err){
                 error_message = "Something went wrong while fetching data.";
+                Logger.log("RealEstate appraisal","[Error] Something went wrong while fetching data. ");
             }
             else if(!data){
                 error_message = "The credentials are not matched. Try again with correct credentials.";
+                Logger.log("RealEstate appraisal","[Error] Incorrect credentials for user id : [ "+UserID+" ]");
             }
             // send data if credentials are correct
             if (error_message == ''){
@@ -117,9 +121,11 @@ module.exports = {
         RealEstate.find({"Value":0}).exec(function(err,data){
             if(err){
                 error_message = "Something went wrong while fetching data.";
+                Logger.log("RealEstate appraisal","[Error] Something went wrong while fetching data. ");
                 return res.send({data:err, errorPresent: true})
             }
             else{
+                Logger.log("RealEstate appraisal","[Success] properties which are left for valuation successfully fetched. ");
                 return res.send({
                     data:data,
                     errorPresent: false
@@ -129,6 +135,7 @@ module.exports = {
     },
 
     updateREData: function(req,res){
+        Logger.log("RealEstate appraisal","[Success] received request for property values submitted by the appraisal ");
         var value = req.param("value");
         var id = req.param('id');
 
@@ -151,12 +158,14 @@ module.exports = {
             MlsID:id
         }).set({Value:value}).exec(function(err,data){
             if(err){
+                Logger.log("RealEstate appraisal","[Error] Something went wrong while fetching data. ");
                 return res.send({data:err})
             }else{
                 
                 console.log(value);
                 console.log(id);
                 // send all the values of each Mlsid which are updated by the appraiser
+                Logger.log("RealEstate appraisal","[Success] properties values are updated and request is sent to the webservice of insurance company ");
                 RealEstate.find({MlsID:id}).exec(function(err,data){
                     return res.send(data)
                 })

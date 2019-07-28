@@ -3,6 +3,7 @@
   // ajax function for Real Estate approval form
   $(document).ready(function() {
           $("#REApprovalForm").submit(function(e) {
+            console.log("Customer Registration request send to RE web service");
               e.preventDefault();
               $.ajax({
                   type : "POST",
@@ -17,6 +18,7 @@
                         
                   },
                   success : function(response) {
+                    console.log("Cutsomer Response received from the RE webservice");
                     console.log(response);
                     if (response.error_message) {
                       $("#resMsg").html( 

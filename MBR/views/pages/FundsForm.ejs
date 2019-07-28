@@ -4,6 +4,7 @@
           // ajax function 
           $(document).ready(function() {
                   $("#fundsform").submit(function(e) {
+                      console.log("New application request.");
                       e.preventDefault();
                       $.ajax({
                           type : "POST",
@@ -21,9 +22,10 @@
                             "mortgage_value":$("#mortgage_value").val(),
                           },
                           beforeSend : function() {
-                                
+                            console.log("Web service called.");  
                           },
                           success : function(response) {
+                            console.log("Web service call success. Response received.");
                             if (response['error_message']) {
                               $("#showApplicationID").html('<p>Error while submitting data: </p>' + response['error_message']);  
                             }
@@ -39,6 +41,7 @@
                             }
                           },
                           error : function() {
+                            console.log("Web service call failed. Error: ", error);  
                             $("#showApplicationID").html('<p>We are facing server issue. Please try again later.</p>');
                             $('#showApplicationLink').html('');
                           }
