@@ -65,7 +65,7 @@ module.exports = {
         var error_message = "";
         var auth = false;
         var enctyptedPassword = '';
-        Logger.log("Appraiser approval form: [Success] request for "+ Name + " successfully sent to RealEstate webservice!")
+        Logger.log("Appraiser approval form: [Success] request for "+ UserID + " successfully sent to RealEstate webservice!");
         // encrypt the password which will be sent in request
         if (password !== undefined && password != '') {
             // http://codeniro.com/caesars-cipher-algorithm-javascript/
