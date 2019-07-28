@@ -17,6 +17,7 @@
 
         // fetch data
         data = JSON.parse(localStorage.getItem("user_data"));
+        console.log("Application status for Application ID: ", data.data.id, " Status: ", data.data.status);
         document.getElementById('ApplicationID').innerHTML = data.data.id;
         document.getElementById('Name').innerHTML = data.data.name;
         document.getElementById('Address').innerHTML = data.data.mailing_address;
