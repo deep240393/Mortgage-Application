@@ -10,7 +10,7 @@
     "@sailshq/socket.io-redis": "^5.2.0",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
-    "grunt": "1.0.1",
+    "grunt": "1.5.2",
     "jsonwebtoken": "^8.5.1",
     "request": "^2.88.0",
     "sails": "^1.2.3",
